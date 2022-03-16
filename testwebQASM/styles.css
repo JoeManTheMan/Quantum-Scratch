@@ -1,0 +1,37 @@
+body {
+	background:#9999;
+}
+
+h1 {
+
+/* h1 heading style editor */
+
+}
+
+a {
+
+/* hyperlink text editor*/
+
+}
+
+p {
+
+/* paragraph style editor*/
+background:white;
+color:black;
+}
+
+.secondary {
+
+/* secondary class style editor */
+background: white;
+color: red;
+
+}
+
+
+#special {
+	/* unique ID style editor */
+	background:white;
+	color:blue;
+}
