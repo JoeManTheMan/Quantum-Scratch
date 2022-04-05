@@ -1,0 +1,49 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-border-box;
+}
+
+.container{
+  height: 100vh;
+  display: flex;
+  flex-flow: column;
+}
+
+.page{
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  /* outline: solid red 1px; */
+}
+
+.BlockArea,
+.CodeArea,
+.OutputArea {
+  text-align: center;
+  flex-grow: 1;
+  /* outline: solid red 1px; */
+}
+
+.BlockArea{
+  background-color: chocolate;
+  height: 100%;
+}
+
+.CodeArea{
+  background-color: rgb(111, 210, 30);
+  height: 100%;
+}
+
+.OutputArea{
+  background-color: rgb(30, 210, 111);
+  height: 100%;
+}
+.NavBar{
+  background-color: cyan;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 100px;
+  height: 100px;
+  width: 100%;
+}
