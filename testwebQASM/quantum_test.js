@@ -1,4 +1,15 @@
-import {generate_QASM, built_in_gate_block, var_definition_block, var_ref_block, var_assignment_block, measurement_block, if_block, expression_block} from './QASM_generator.js';
+import {generate_QASM, 
+    built_in_gate_block, 
+    var_def_block, 
+    var_ref_block, 
+    var_assignment_block, 
+    measurement_block,
+    if_block, 
+    expression_block,
+    loop_block,
+    custom_function_def,
+    custom_function_ref,
+    n_bit_controlled_gate} from './QASM_generator.js';
 
 /*var circuit = new QuantumCircuit();
 circuit.addGate("h", 0, 1);
@@ -32,30 +43,43 @@ var text = document.getElementById('text');
 const blocks = [];
 
 
-let nested_expr_blk = new expression_block("", undefined, "+", [1, 2]);
+let nested_expr_blk = new expression_block("", undefined, "+", [new var_ref_block("b", undefined), 2]);
 let expr_blk = new expression_block("", undefined, "+", [nested_expr_blk, 2]);
 let var_assgn = new var_assignment_block("", undefined, new var_ref_block("b", undefined), expr_blk);
+
+let had_block = new built_in_gate_block("h", undefined, [], [1]);
+let var_b = new var_ref_block("b", undefined);
+
+let var_assgn2 = new var_assignment_block("", undefined, var_b, expr_blk);
+let had_block2 = new built_in_gate_block("h", undefined, [], [var_b]);
+
+
+
+let cust_func = new custom_function_def("cust", undefined, 0, 0, [new built_in_gate_block("h", undefined, [], [0]),
+                                                                new built_in_gate_block("u1", undefined, [0.6], [0]),
+                                                                new built_in_gate_block("u1", undefined, [0.4], [new var_ref_block("a", undefined)]),
+                                                                new built_in_gate_block("u1", undefined, [0.9], [3])]);
 
 blocks.push(
     new built_in_gate_block("h", undefined, [], [0]),
     new built_in_gate_block("u1", undefined, [0.6], [0]),
     new built_in_gate_block("u1", undefined, [0.4], [new var_ref_block("a", undefined)]),
-    new built_in_gate_block("u1", undefined, [0.9, 3], [3]), // fails due to more parameters than expected
-    new built_in_gate_block("u1", undefined, [0.2], [2, 4]), // fails due to more operands than expected
+    //new built_in_gate_block("u1", undefined, [0.9, 3], [3]), // fails due to more parameters than expected
+    //new built_in_gate_block("u1", undefined, [0.2], [2, 4]), // fails due to more operands than expected
     new built_in_gate_block("u3", undefined, [0.5, 1, new var_ref_block("ang", undefined)], [5]),
-    new built_in_gate_block("ch", undefined, [], [1, 1]), // fails due to duplicate operands
+    //new built_in_gate_block("ch", undefined, [], [1, 1]), // fails due to duplicate operands
     new built_in_gate_block("cx", undefined, [], [new var_ref_block("lst_var", undefined)]),
     new built_in_gate_block("cu3", undefined, [new var_ref_block("lst_var_angles")], [new var_ref_block("lst_var", undefined)]),
 
     new var_assignment_block("", undefined, new var_ref_block("a", undefined), 2),
     new built_in_gate_block("u1", undefined, [0.7], [new var_ref_block("a", undefined)]),
 
-    new var_definition_block("a", undefined,  "integer", 1),
-    new var_definition_block("b", undefined,  "integer", 0),
-    new var_definition_block("23", undefined,  "integer", "a"),
-    new var_definition_block("ang", undefined,  "angle", 2.1),
-    new var_definition_block("lst_var_angles", undefined, "angle_list", [1.4, 2, 4]),
-    new var_definition_block("lst_var", undefined, "integer_list", [1,0]),
+    new var_def_block("a", undefined,  "integer", 1),
+    new var_def_block("b", undefined,  "integer", 0),
+    //new var_def_block("23", undefined,  "integer", "a"),
+    new var_def_block("ang", undefined,  "angle", 2.1),
+    new var_def_block("lst_var_angles", undefined, "angle_list", [1.4, 2, 4]),
+    new var_def_block("lst_var", undefined, "integer_list", [1,0]),
     
     new if_block("if", undefined, [4], [new built_in_gate_block("u1", undefined, [0.6], [0])]),
     new if_block("if", undefined, [3], [new built_in_gate_block("cu3", undefined, [new var_ref_block("lst_var_angles")], [new var_ref_block("lst_var", undefined)])]),
@@ -63,18 +87,27 @@ blocks.push(
     new measurement_block("", undefined, [] , true),
 
     var_assgn,
-    new built_in_gate_block("ch", undefined, [], [new var_ref_block("b", undefined), 1]) 
+    new built_in_gate_block("ch", undefined, [], [new var_ref_block("b", undefined), 1]),
+    new loop_block("hadamard loop", undefined, 2, [had_block, var_assgn2, had_block2]),  
+
+    cust_func,
+    new custom_function_ref("cust", undefined, undefined, undefined),
+    new n_bit_controlled_gate("", undefined, [1, 2], [0, 3], 5, "cx")
     );
 
-var beginning_blocks = JSON.stringify(blocks);
+var beginning_blocks = JSON.stringify(blocks, null, ' ');
 
 
 var circuit = new QuantumCircuit;
 var num_qubits = 6;
 
+var start = performance.now();
 var qasm = generate_QASM(blocks, num_qubits).reduce((previous_string, current_string) => previous_string + current_string[0]);
+var end = performance.now();
 
-var end_blocks = JSON.stringify(blocks);
+console.log(`time taken is ${end - start} ms`);
+
+var end_blocks = JSON.stringify(blocks, null, ' ');
 
 if(beginning_blocks != end_blocks)
 {
@@ -85,7 +118,7 @@ if(beginning_blocks != end_blocks)
 } else
 {
     console.log("hooray, beginning blocks is identical to ending blocks");
-    console.log(beginning_blocks);
+    // console.log(beginning_blocks);
 }
 
 console.log(qasm);

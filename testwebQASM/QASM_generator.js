@@ -172,6 +172,29 @@ const built_in_gates =
 
 }
 
+const var_types = 
+{
+    int: "integer",
+    int_list: "integer_list",
+    angle: "angle",
+    angle_list: "angle_list"
+}
+
+const block_types = 
+{
+    built_in_gate: "built_in_gate",
+    variable_def: "variable_def",
+    variable_ref: "variable_ref",
+    var_assignment: "var_assignment",
+    measurement: "measurement",
+    expression: "expression",
+    if: "if",
+    loop: "loop",
+    custom_function_def: "custom_function_def",
+    custom_function_ref: "custom_function_ref",
+    n_bit_controlled_gate: "n_bit_controlled_gate"
+}
+
 class block
 {
     constructor(block_name, block_id)
@@ -187,23 +210,23 @@ class built_in_gate_block extends block
     constructor(block_name, block_id, parameters, qubit_operands)
     {
         super(block_name, block_id);
-        this.block_type = "built_in_gate";
         this.parameters = parameters;
         this.qubit_operands = qubit_operands;
+        this.block_type = block_types.built_in_gate;
     }
 }
 
 // variable can be either a list or a single value
 // if var_type is "angle_list" or "integer_list", it must be an array
 // if var_type is "angle" or "integer", it must be a single value
-class var_definition_block extends block
+class var_def_block extends block
 {
     constructor(block_name, block_id, var_type, value = 0)
     {
         super(block_name, block_id);
-        this.block_type = "variable_def";
         this.var_type = var_type;
         this.value = value;
+        this.block_type = block_types.variable_def;
     }
 }
 
@@ -213,7 +236,7 @@ class var_ref_block extends block
     constructor(block_name, block_id)
     {
         super(block_name, block_id);
-        this.block_type = "variable_ref";
+        this.block_type = block_types.variable_ref;
     }
 }
 
@@ -227,7 +250,7 @@ class var_assignment_block extends block
         super(block_name, block_id);
         this.lhs = lhs; // should be a variable reference
         this.rhs = rhs; // should evaluate to a value of the same type as lhs
-        this.block_type = "var_assignment";
+        this.block_type = block_types.var_assignment;
     }
 }
 
@@ -239,7 +262,7 @@ class measurement_block extends block
         super(block_name, block_id);
         this.qubit_operands = qubit_operands;
         this.measure_all = measure_all;
-        this.block_type = "measurement";
+        this.block_type = block_types.measurement;
     }
 }
 
@@ -256,28 +279,78 @@ class expression_block extends block
         super(block_name, block_id);
         this.operator = operator;
         this.operands = operands;
-        this.block_type = "expression";
+        this.block_type = block_types.expression;
     }
 
 }
 
-// values is an array containing the value to compare the if statement against
-// value should be an array with only 1 element
+// values is an array containing the value to compare the if  astatementgainst
 // multiple values may be supported in the future
-// gates is the gate block to be executed if the condition is true 
+// gate is the gate block to be executed if the condition is true 
 // multiple gates may be supported in the future
 class if_block extends block
 {
-    constructor(block_name, block_id, values, gates)
+    constructor(block_name, block_id, values, gate)
     {
         super(block_name, block_id);
         this.values = values;
-        this.gates = gates;
-        this.block_type = "if";
+        this.gate = gate;
+        this.block_type = block_types.if;
     }
 }    
 
 
+class loop_block extends block
+{
+    constructor(block_name, block_id, num_loops, blocks)
+    {
+        super(block_name, block_id);
+        this.num_loops = num_loops;
+        this.blocks = blocks;
+        this.block_type = block_types.loop;
+    }
+}
+
+// currently params and operands do nothing and everything must exist hardcoded within the blocks
+class custom_function_def extends block
+{
+    constructor(block_name, block_id, num_params, num_operands, blocks)
+    {
+        super(block_name, block_id);
+        this.num_params = num_params;
+        this.num_operands = num_operands;
+        this.blocks = blocks;
+        this.block_type = block_types.custom_function_def;
+    }
+}
+
+// currently params and operands do nothing
+class custom_function_ref extends block
+{
+    constructor(block_name, block_id, params, operands)
+    {
+        super(block_name, block_id);
+        this.params = params;
+        this.operands = operands;
+        this.block_type = block_types.custom_function_ref;
+    }
+}
+
+// controls is an array of controls
+// anticontrols is an array of anticontrols
+// target is a single qubit value
+class n_bit_controlled_gate extends block
+{
+    constructor(block_name, block_id, controls, anticontrols, target, gate_name)
+    {
+        super(block_name, block_id);
+        this.controls = controls;
+        this.anticontrols = anticontrols;
+        this.target = target;
+        this.gate_name = gate_name;
+        this.block_type = block_types.n_bit_controlled_gate;
+    }
+}
 
 /*
  * Takes 2 parameters, blocks representing the code, and the number of qubits in the circuit
@@ -289,27 +362,33 @@ class if_block extends block
  */
 function generate_QASM(blocks)
 {
-    // puts all the variables into this object
+    // puts all the variables into this object, with names as the keys.
     // checks for duplicates
     // TODO: possibly check variable dependancies for cycles
     let variables = preprocess_variables(blocks);
+
+    // puts references to functions into functions block, with names as the keys
+    let functions = preprocess_functions(blocks);
     console.log(variables);
 
-    // this value will contain the highest number of qubit that is used
-    // an array is chosen so that num_qubits can be passed by reference instead of value
-    let num_qubits = [0]; 
+    // first value is the qubits in q, the qubits being operated on
+    // second value is the qubits in anc, an ancilla qreg
+    let num_qubits = [0, 0]; 
     
     let qasm = [["OPENQASM 2.0;\ninclude \"qelib1.inc\";\n"]];
     qasm.push(["qreg q["]); // these will be filled in later with the max value of qubits
     qasm.push(["creg c["]);
+    qasm.push(["qreg anc["]);
 
     // goes over each block, adding their respective qasm to the qasm array
     // 1 is added to num_qubits because it is set to the value of the highest qubit operand but is 0 indexed
-    process_blocks(qasm, blocks, variables, num_qubits);
+    process_blocks(qasm, blocks, variables, num_qubits, functions);
     num_qubits[0] += 1;
+    num_qubits[1] += 1;
 
-    qasm[1][0] += `${num_qubits}];\n`;
-    qasm[2][0] += `${num_qubits}];\n`;
+    qasm[1][0] += `${num_qubits[0]}];\n`;
+    qasm[2][0] += `${num_qubits[0]}];\n`;
+    qasm[3][0] += `${num_qubits[1]}];\n`;
     return qasm;
 }
 
@@ -320,14 +399,14 @@ function generate_QASM(blocks)
  * returns the number of qubits (the highest number found inside the blocks as a qubit operand after processing)
  * type restrictions restrict the valid types that the blocks can be
  */
-function process_blocks(qasm, blocks, variables, num_qubits, type_restrictions={})
+function process_blocks(qasm, blocks, variables, num_qubits, functions, type_restrictions={})
 {
     for(let i = 0; i < blocks.length; i++)
     {
 
         switch(blocks[i].block_type)
         {
-            case "built_in_gate":
+            case block_types.built_in_gate:
             {
                 let block = expand_built_in_variables(blocks[i], variables);
                 if(block.block_name in built_in_gates)
@@ -343,7 +422,7 @@ function process_blocks(qasm, blocks, variables, num_qubits, type_restrictions={
                 }
                 break;
             } 
-            case "var_assignment":   
+            case block_types.var_assignment:   
             {
                 // does the variable assignment described in the block
                 variable_assignment(blocks[i], variables);
@@ -351,7 +430,7 @@ function process_blocks(qasm, blocks, variables, num_qubits, type_restrictions={
                 console.log(variables);
                 break;
             }
-            case "measurement":
+            case block_types.measurement:
             {
                 let block = expand_measurement_variables(blocks[i], variables);
 
@@ -359,13 +438,35 @@ function process_blocks(qasm, blocks, variables, num_qubits, type_restrictions={
                 qasm.push([measurement_block_to_qasm(block), block.block_id]);
                 break;
             }
-            case "if":
+            case block_types.if:
             {
                 // TODO: check validity of if-block
                 let block = expand_if_variables(blocks[i], variables);
 
                 qasm.push([if_block_to_qasm(block, variables, num_qubits), block.block_id]);
                 break;
+            }
+            case block_types.loop:
+            {
+                let block = expand_loop_count(blocks[i], variables);
+
+                qasm.push(...loop_block_to_qasm(block, variables, num_qubits));
+                break;
+            }
+            case block_types.custom_function_ref:
+            {
+                let block = functions[blocks[i].block_name];
+                console.log("functions");
+                console.log(functions);
+                
+                qasm.push(...custom_function_to_qasm(block, variables, num_qubits, functions));
+
+
+                break;
+            }
+            case block_types.n_bit_controlled_gate:
+            {
+                qasm.push(...n_bit_cgate_to_qasm(blocks[i], variables, num_qubits));
             }
             default:
                 //console.log("something went wrong");
@@ -379,7 +480,7 @@ function process_blocks(qasm, blocks, variables, num_qubits, type_restrictions={
  * Reads the block name, and finds the corresponding built in gate, and converts it into QASM
  * Takes a block as a parameter. 
  */
-function built_in_gate_to_QASM(block)
+function built_in_gate_to_QASM(block, qreg="q")
 {
     
     let gate = built_in_gates[block.block_name];
@@ -398,7 +499,7 @@ function built_in_gate_to_QASM(block)
     if(gate.num_qubit_operands > 0)
     {
         gate_qasm += ' ';
-        gate_qasm += block.qubit_operands.map(operand => `q[${operand}]`).join(",");
+        gate_qasm += block.qubit_operands.map(operand => `${qreg}[${operand}]`).join(",");
     }
     gate_qasm += ';\n';
 
@@ -473,7 +574,7 @@ function preprocess_variables(blocks)
     for(let i = 0; i < blocks.length; i++)
     {
        
-        if(blocks[i].block_type == "variable_def")
+        if(blocks[i].block_type == block_types.variable_def)
         {
             let var_def_block = blocks[i];
 
@@ -482,10 +583,11 @@ function preprocess_variables(blocks)
             {
                 console.log(`error: ${blocks[i].block_name} variable is defined more than once`);
                 continue;
-            };
+            }
 
             // assigns variable to object property, with the name being the key, this will be useful to look up the variable later
-            variables[var_def_block.block_name] = { 
+            variables[var_def_block.block_name] =
+            { 
                 block_id: var_def_block.block_id, 
                 var_type: var_def_block.var_type,
                 value: var_def_block.value
@@ -496,6 +598,32 @@ function preprocess_variables(blocks)
     }
     return variables;
 }
+
+function preprocess_functions(blocks)
+{
+    let functions = {};
+
+    for(let i = 0; i < blocks.length; i++)
+    {
+        if(blocks[i].block_type == block_types.custom_function_def)
+        {
+            if(blocks[i].block_name in functions)
+            {
+                console.log(`error: ${blocks[i].block_name} variable is defined more than once`);
+                continue;
+            }
+
+            functions[blocks[i].block_name] = blocks[i];
+        }
+
+        
+    }
+
+    console.log("preprocessed_functions");
+    console.log(functions);
+    return functions;
+}
+
 
 /* goes through the blocks parameters and replaces variables with their values
  * returns a copy of the block
@@ -509,7 +637,7 @@ function expand_built_in_variables(block, variables)
 {
     //creates a copy of the block
     let expanded_block = {};
-    Object.assign(expanded_block, block);
+    copy_block(expanded_block, block);
 
     if("qubit_operands" in expanded_block)
     {
@@ -540,14 +668,14 @@ function variable_assignment(block, variables)
     console.log(variables);
 
     let expanded_block = {};
-    Object.assign(expanded_block, block);
+    copy_block(expanded_block, block);
 
     
     // finds variable with the given name
     let variable = variables[expanded_block.lhs.block_name];
 
 
-    if(expanded_block.rhs.block_type == "expression")
+    if(expanded_block.rhs.block_type == block_types.expression)
     {
         console.log("expanded_block.rhs.block_type is expression");
         console.log(expanded_block);
@@ -594,13 +722,14 @@ function is_valid_qubit_operand(qubit_operand)
 // values array is the array that may contain variables that have a specified type
 // variables is an object containing key/value pairs with variables and their values
 // var_type is a string, if it is "angle", then "angle" and "angle_list" values will be processed
-function expand_array_vars(values_array, variables, var_type)
+function expand_array_vars(values_array, variables, var_type, )
 {
+
     for(let i = 0; i < values_array.length; i++)
     {
         let value = values_array[i];
 
-        if(value.block_type == "variable_ref")
+        if(value.block_type == block_types.variable_ref)
         {
             // search for variable with the name found in the variable reference
             console.log(value.block_name);
@@ -630,7 +759,7 @@ function expand_array_vars(values_array, variables, var_type)
 function expand_measurement_variables(block, variables)
 {
     let expanded_block = {};
-    Object.assign(expanded_block, block);
+    copy_block(expanded_block, block);
 
     if("qubit_operands" in expanded_block)
     {
@@ -653,7 +782,7 @@ function measurement_block_to_qasm(block)
         qasm = "measure q -> c;\n";
     } else
     {
-        qasm += block.qubit_operands.map(operand => `measure q[${operand}] -> c[${operand}]\n`).join('');
+        qasm += block.qubit_operands.map(operand => `measure q[${operand}] -> c[${operand}];\n`).join('');
     }
     return qasm;
 }
@@ -662,7 +791,7 @@ function expand_if_variables(block, variables)
 {
     let expanded_block = {};
 
-    Object.assign(expanded_block, block);
+    copy_block(expanded_block, block);
 
     if("values" in expanded_block)
     {
@@ -682,7 +811,7 @@ function if_block_to_qasm(block, variables, num_qubits)
 
     qasm = `if(c==${block.values[0]}) `;
 
-    process_blocks(gate_qasm, block.gates, variables, num_qubits, {built_in_gate: true});
+    process_blocks(gate_qasm, block.gate, variables, num_qubits, undefined, {built_in_gate: true});
 
     qasm += gate_qasm[0][0];
 
@@ -694,24 +823,28 @@ function if_block_to_qasm(block, variables, num_qubits)
 // recursively evaluates expression blocks, returns a number
 function evaluate_expression_block(block, variables, type)
 {
-    let lhs = block.operands[0];
-    let rhs = block.operands[1];
+    let expanded_block = {};
+    copy_block(expanded_block, block);
 
-    if(lhs.block_type == "variable_ref" || rhs.block_type == "variable_ref")
+    let lhs = expanded_block.operands[0];
+    let rhs = expanded_block.operands[1];
+
+    if(lhs.block_type == block_types.variable_ref || rhs.block_type == block_types.variable_ref)
     {
-        expand_array_vars(block.operands, variables, type);
+        expand_array_vars(expanded_block.operands, variables, type);
+        lhs = expanded_block.operands[0];
+        rhs = expanded_block.operands[1];
     }
 
-    lhs = block.operands[0];
-    rhs = block.operands[1];
     
-    if(lhs.block_type == "expression")
+    
+    if(lhs.block_type == block_types.expression)
     {
         lhs = evaluate_expression_block(lhs, variables, type);
 
     } 
 
-    if(rhs.block_type == "expression")
+    if(rhs.block_type == block_types.expression)
     {
         rhs = evaluate_expression_block(rhs, variables, type);
     }
@@ -746,13 +879,103 @@ function evaluate_expression_block(block, variables, type)
 
 }
 
+// TODO: expand the variable, evaluating it if needed
+function expand_loop_count(block, variables)
+{
+    let expanded_block = {};
+
+    copy_block(expanded_block, block);
+
+    
+
+    return expanded_block;
+}
+
+/*
+ * Performs a deeper copy than object.assign
+ * This function is intended to be used before variable references are replaced with their values, 
+ * to keep the variable reference intact in the original block
+ */
+function copy_block(target, source_block)
+{
+    Object.assign(target, source_block);
+
+    for(let property in target)   
+    {
+        if(Array.isArray(target[property]))
+        {
+            target[property] = target[property].slice();
+        }
+    }
+}
+
+function loop_block_to_qasm(block, variables, num_qubits, functions)
+{
+    let gate_qasm = [];
+
+    for(let i = 0; i < block.num_loops; i++)
+    {
+        process_blocks(gate_qasm, block.blocks, variables, num_qubits, functions);
+    }
+
+    return gate_qasm;
+}
+
+function custom_function_to_qasm(block, variables, num_qubits, functions)
+{
+    let gate_qasm = [];
+
+    process_blocks(gate_qasm, block.blocks, variables, num_qubits, functions);
+
+    return gate_qasm;
+}
+
+function n_bit_cgate_to_qasm(block, variables, num_qubits)
+{
+    let qasm = [];
+    
+    let built_in = [new built_in_gate_block("x", undefined, [], [])];
+    
+    // invert anticontrols
+    for(let i = 0; i < block.anticontrols.length; i++)
+    {
+        built_in[0].qubit_operands[0] = block.anticontrols[i];
+        
+        process_blocks(qasm, built_in, variables, num_qubits, undefined);
+    }
+
+    let controls = [...block.controls, ...block.anticontrols];
+    qasm.push([`ccx q[${controls[0]}], q[${controls[1]}], anc[0];\n`, block.block_id]);
+
+    for(let i = 2; i < controls.length; i++)
+    {
+        qasm.push([`ccx q[${controls[i]}], anc[${i-2}], anc[${i-1}];\n`, block.block_id]);
+    }
+
+    num_qubits[1] = Math.max(num_qubits[1], controls.length-1);
+
+    qasm.push([`${block.gate_name} anc[${controls.length-1}], q[${block.target}];\n`]);
+
+    // invert anticontrols again, to bring them back to normal
+    for(let i = 0; i < block.anticontrols.length; i++)
+    {
+        built_in[0].qubit_operands[0] = block.anticontrols[i];
+        
+        process_blocks(qasm, built_in, variables, num_qubits, undefined);
+    }
+    return qasm;
+}
 
 export {generate_QASM, 
     built_in_gate_block, 
-    var_definition_block, 
+    var_def_block, 
     var_ref_block, 
     var_assignment_block, 
     measurement_block,
     if_block, 
-    expression_block};
+    expression_block,
+    loop_block,
+    custom_function_def,
+    custom_function_ref,
+    n_bit_controlled_gate};
 
