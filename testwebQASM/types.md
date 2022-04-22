@@ -5,7 +5,7 @@
 `constructor(block_name, block_id)`
 
 #### Properties:
-block_name: the name of the block, this can represent different things to different subtypes of the block class
+block_name: the name of the block, this can represent different things to different subtypes of the block class 
 block_id: a unique id for the block. It is used to link a block to the respective qasm generated from it
 
 #### block subclasses:
