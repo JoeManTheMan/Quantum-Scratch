@@ -128,9 +128,9 @@ params: an array of parameters(angles) to pass to the inner block. This value cu
 operands: an array of operands(integers) to pass to the inner block. This value currently does nothing  
 block_type: a string containing the type of the block. It is automatically set to "custom_function_ref" upon construction of the block object  
 
-### n_bit_controlled_gate
+### n_bit_toffoli_to_qasm
 #### Constructor
-`constructor(block_name, block_id, controls, anticontrols, target, gate_name)`  
+`constructor(block_name, block_id, controls, anticontrols, target)`  
 
 #### Properties:
 block_name: a string containing the name of the block, it is currently unused in this block type  
