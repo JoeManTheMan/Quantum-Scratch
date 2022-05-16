@@ -1,4 +1,3 @@
-// TODO: if statement - reads bit from creg
 // variables - list, can refer to qubits, classical bits or angles - ints, qubits or angles
 // control block, will conditionally execute a gate based off the state of other qubits, cannot be the same ones
 // measurement block - measures a number of qubits, records the result in a classical bit for each qubit
@@ -192,7 +191,7 @@ const block_types =
     loop: "loop",
     custom_function_def: "custom_function_def",
     custom_function_ref: "custom_function_ref",
-    n_bit_controlled_gate: "n_bit_controlled_gate"
+    n_bit_toffoli: "n_bit_toffoli"
 }
 
 class block
@@ -339,18 +338,38 @@ class custom_function_ref extends block
 // controls is an array of controls
 // anticontrols is an array of anticontrols
 // target is a single qubit value
-class n_bit_controlled_gate extends block
+class n_bit_toffoli extends block
 {
-    constructor(block_name, block_id, controls, anticontrols, target, gate_name)
+    constructor(block_name, block_id, controls, anticontrols, target)
     {
         super(block_name, block_id);
         this.controls = controls;
         this.anticontrols = anticontrols;
         this.target = target;
-        this.gate_name = gate_name;
-        this.block_type = block_types.n_bit_controlled_gate;
+        this.block_type = block_types.n_bit_toffoli;
     }
 }
+
+const error_types = 
+{
+    // gate errors
+    invalid_gate: "gate does not exist",
+    invalid_params_len: "number of parameters does not match expected of parameters",
+    invalid_operands_len: "number of parameters does not match expected of parameters",
+    invalid_param: "parameter is not valid",
+    invalid_operand: "operand is not valid",
+    duplicate_operands: "duplicate operands",
+
+    duplicate_var_defs: "variable is defined more than once",
+    duplicate_fun_defs: "function is defined more than once",
+
+    unsupported_operator: "operator is not supported",
+
+    invalid_if: "if block is not valid, check that the value is an integer greater than 0",
+    invalid_loop: "loop block is not valid, check that loop count is an integer"
+}
+
+var errors = [];
 
 /*
  * Takes 2 parameters, blocks representing the code, and the number of qubits in the circuit
@@ -366,6 +385,9 @@ function generate_QASM(blocks)
     // checks for duplicates
     // TODO: possibly check variable dependancies for cycles
     let variables = preprocess_variables(blocks);
+
+    // clears errors from previous calls
+    errors = [];
 
     // puts references to functions into functions block, with names as the keys
     let functions = preprocess_functions(blocks);
@@ -389,7 +411,7 @@ function generate_QASM(blocks)
     qasm[1][0] += `${num_qubits[0]}];\n`;
     qasm[2][0] += `${num_qubits[0]}];\n`;
     qasm[3][0] += `${num_qubits[1]}];\n`;
-    return qasm;
+    return {qasm,errors};
 }
 
 /*
@@ -418,7 +440,7 @@ function process_blocks(qasm, blocks, variables, num_qubits, functions, type_res
                     }
                 } else 
                 {
-                    console.log("block does not exist, or has wrong type\n" + block);
+                    errors.push([error_types.invalid_gate, block]);
                 }
                 break;
             } 
@@ -426,13 +448,14 @@ function process_blocks(qasm, blocks, variables, num_qubits, functions, type_res
             {
                 // does the variable assignment described in the block
                 variable_assignment(blocks[i], variables);
-                console.log("Variables after this var assignment are");
-                console.log(variables);
+                // console.log("Variables after this var assignment are");
+                // console.log(variables);
                 break;
             }
             case block_types.measurement:
             {
-                let block = expand_measurement_variables(blocks[i], variables);
+
+                let block = expand_measurement_variables(blocks[i], variables); 
 
                 num_qubits[0] = Math.max(num_qubits[0], ...block.qubit_operands);
                 qasm.push([measurement_block_to_qasm(block), block.block_id]);
@@ -440,17 +463,29 @@ function process_blocks(qasm, blocks, variables, num_qubits, functions, type_res
             }
             case block_types.if:
             {
-                // TODO: check validity of if-block
                 let block = expand_if_variables(blocks[i], variables);
-
-                qasm.push([if_block_to_qasm(block, variables, num_qubits), block.block_id]);
+                
+                if(is_valid_if_block(block))
+                {
+                    qasm.push([if_block_to_qasm(block, variables, num_qubits), block.block_id]);
+                }
+                else
+                {
+                    errors.push([error_types.invalid_if, block]);
+                }
                 break;
             }
             case block_types.loop:
             {
                 let block = expand_loop_count(blocks[i], variables);
 
-                qasm.push(...loop_block_to_qasm(block, variables, num_qubits));
+                if(is_valid_loop_block(block))
+                {
+                    qasm.push(...loop_block_to_qasm(block, variables, num_qubits));
+                } else   
+                {
+                    errors.push([error_types.invalid_loop, block])
+                }
                 break;
             }
             case block_types.custom_function_ref:
@@ -464,9 +499,9 @@ function process_blocks(qasm, blocks, variables, num_qubits, functions, type_res
 
                 break;
             }
-            case block_types.n_bit_controlled_gate:
+            case block_types.n_bit_toffoli:
             {
-                qasm.push(...n_bit_cgate_to_qasm(blocks[i], variables, num_qubits));
+                qasm.push(...n_bit_toffoli_to_qasm(blocks[i], variables, num_qubits));
             }
             default:
                 //console.log("something went wrong");
@@ -520,12 +555,14 @@ function is_valid_built_in(block)
     // check for equality in the number of parameters
     if(gate.num_parameters != block.parameters.length)
     {
-        console.log(`expected ${gate.num_parameters} parameters, found ${block.parameters.length}  parameters`);
+        errors.push([error_types.invalid_params_len, block]);
+        return false;
     }
 
     if(gate.num_qubit_operands !=  block.qubit_operands.length)
     {
-        console.log(`expected ${gate.num_qubit_operands} operands, found ${block.qubit_operands.length}  operands`);
+        errors.push([error_types.invalid_operands_len, block]);
+        return false;
     }
 
     // validate the parameters (numbers between 0 and 2 pi)
@@ -533,6 +570,7 @@ function is_valid_built_in(block)
     {
         if(!is_valid_param(parameter))
         {
+            errors.push([error_types.invalid_param, block]);
             return false;
         }
     }
@@ -544,17 +582,13 @@ function is_valid_built_in(block)
     {
         if(!is_valid_qubit_operand(block.qubit_operands[i]))
         {
-            console.log("operands are not valid integers: ");
-            console.log(block.qubit_operands[i]);
-            console.log("num is int " + Number.isInteger(block.qubit_operands[i]) + " block.qubit_operands[i]");
-            console.log(typeof(block.qubit_operands[i]));
-            console.log(block);
+            errors.push([error_types.invalid_operand, block]);
             return false;
         }
         
         if(block.qubit_operands[i] in operands)
         {  
-            console.log("duplicate operands: \"" + block.qubit_operands[i] + "\"");
+            errors.push([error_types.duplicate_operands, block]);
             return false;
         } else
         {
@@ -581,7 +615,7 @@ function preprocess_variables(blocks)
             // check if variable name already exists
             if(var_def_block.block_name in variables)
             {
-                console.log(`error: ${blocks[i].block_name} variable is defined more than once`);
+                errors.push([error_types.duplicate_var_defs, blocks[i]]);
                 continue;
             }
 
@@ -609,7 +643,7 @@ function preprocess_functions(blocks)
         {
             if(blocks[i].block_name in functions)
             {
-                console.log(`error: ${blocks[i].block_name} variable is defined more than once`);
+                errors.push([error_types.duplicate_fun_defs, blocks[i]]);
                 continue;
             }
 
@@ -631,7 +665,6 @@ function preprocess_functions(blocks)
  * if there are variable references, these are replaced by the value of the variable
  * returns a copy of the block with the variables replaced with numbers
  * 
- *  TODO: reduce duplicated code.
  */
 function expand_built_in_variables(block, variables)
 {
@@ -643,18 +676,18 @@ function expand_built_in_variables(block, variables)
     {
         expand_array_vars(expanded_block.qubit_operands, variables, "integer");
         
-    } else
-    {
-        console.log("error, block is missing attributes");
-    }
+    }// else
+    // {
+    //     console.log("error, block is missing attributes");
+    // }
     
     if("parameters" in expanded_block)
     {
         expand_array_vars(expanded_block.parameters, variables, "angle");
-    } else
-    {
-        console.log("error, block is missing attributes");
-    }
+    }// else
+    // {
+    //     console.log("error, block is missing attributes");
+    // }
 
     return expanded_block;
 }
@@ -677,15 +710,15 @@ function variable_assignment(block, variables)
 
     if(expanded_block.rhs.block_type == block_types.expression)
     {
-        console.log("expanded_block.rhs.block_type is expression");
-        console.log(expanded_block);
+        // console.log("expanded_block.rhs.block_type is expression");
+        // console.log(expanded_block);
         expanded_block.rhs = evaluate_expression_block(expanded_block.rhs, variables, expanded_block.lhs.var_type);
     } else
     {
-        console.log("expanded_block.rhs.block_type is not expression, it is ");
-        console.log(expanded_block.rhs.block_type);
-        console.log("expanded block");
-        console.log(expanded_block)
+        // console.log("expanded_block.rhs.block_type is not expression, it is ");
+        // console.log(expanded_block.rhs.block_type);
+        // console.log("expanded block");
+        // console.log(expanded_block)
     }
 
     variable.value = expanded_block.rhs;
@@ -702,7 +735,6 @@ function is_valid_param(parameter)
 
     if(parameter < 0 || parameter > (2 * Math.PI))
     {
-        console.log("invalid parameter in block " + parameter + " is not between 0 and 2PI");
         return false;
     }
     return true;
@@ -722,7 +754,7 @@ function is_valid_qubit_operand(qubit_operand)
 // values array is the array that may contain variables that have a specified type
 // variables is an object containing key/value pairs with variables and their values
 // var_type is a string, if it is "angle", then "angle" and "angle_list" values will be processed
-function expand_array_vars(values_array, variables, var_type, )
+function expand_array_vars(values_array, variables, var_type)
 {
 
     for(let i = 0; i < values_array.length; i++)
@@ -746,10 +778,10 @@ function expand_array_vars(values_array, variables, var_type, )
             if(variable.value != undefined)
             {
                 values_array[i] = variable.value;
-            } else
-            {
-                console.log("something went wrong with expanding variables");
-            }
+            }// else
+            // {
+            //     console.log("something went wrong with expanding variables");
+            // }
         }
     }
 }
@@ -764,10 +796,10 @@ function expand_measurement_variables(block, variables)
     if("qubit_operands" in expanded_block)
     {
         expand_array_vars(expanded_block.qubit_operands, variables, "integer");
-    } else
-    {
-        console.log("block has missing properties");
-    }
+    } // else
+    // {
+    //     console.log("block has missing properties");
+    // }
 
     return expanded_block;
 }
@@ -796,10 +828,10 @@ function expand_if_variables(block, variables)
     if("values" in expanded_block)
     {
         expand_array_vars(expanded_block.values, variables, "integer");
-    } else
-    {
-        console.log("if\" block has missing properties");
-    }
+    } // else
+    // {
+    //     console.log("\"if\" block has missing properties");
+    // }
 
     return expanded_block;
 }
@@ -819,6 +851,16 @@ function if_block_to_qasm(block, variables, num_qubits)
 
     return qasm;
 };
+
+function is_valid_if_block(block)
+{
+    if(!Number.isInteger(block.values[0]) || block.values < 0)
+    {
+        return false;
+    }
+
+    return true;
+}
 
 // recursively evaluates expression blocks, returns a number
 function evaluate_expression_block(block, variables, type)
@@ -865,28 +907,33 @@ function evaluate_expression_block(block, variables, type)
             }
             default:
             {
-                console.log("unsupported operator:");
-                console.log(block.operator);
-                console.log("is not supported");
+                errors.push([error_types.unsupported_operator, block]);
             }
         }
     } else
     {
-        console.log("something went wrong with evaluating expressions");
-        console.log("block is");
-        console.log(block);
+        // console.log("something went wrong with evaluating expressions");
+        // console.log("block is");
+        // console.log(block);
     }
 
 }
 
-// TODO: expand the variable, evaluating it if needed
 function expand_loop_count(block, variables)
 {
     let expanded_block = {};
 
     copy_block(expanded_block, block);
 
-    
+    if(expanded_block.loop_count.block_type == block_types.expression)
+    {
+        expanded_block.loop_count = evaluate_expression_block(expanded_block.loop_count, variables, var_types.int);
+    } else
+    {
+        let num_loops = [expanded_block.num_loops];
+        expand_array_vars(num_loops, variables, var_types.int);
+        expanded_block.num_loops = num_loops[0]; 
+    }
 
     return expanded_block;
 }
@@ -921,6 +968,16 @@ function loop_block_to_qasm(block, variables, num_qubits, functions)
     return gate_qasm;
 }
 
+function is_valid_loop_block(block)
+{
+    if(!Number.isInteger(block.num_loops) || block.num_loops < 0)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 function custom_function_to_qasm(block, variables, num_qubits, functions)
 {
     let gate_qasm = [];
@@ -930,23 +987,24 @@ function custom_function_to_qasm(block, variables, num_qubits, functions)
     return gate_qasm;
 }
 
-function n_bit_cgate_to_qasm(block, variables, num_qubits)
+function n_bit_toffoli_to_qasm(block, variables, num_qubits)
 {
     let qasm = [];
     
-    let built_in = [new built_in_gate_block("x", undefined, [], [])];
+    let x_gate = [new built_in_gate_block("x", undefined, [], [])];
     
     // invert anticontrols
     for(let i = 0; i < block.anticontrols.length; i++)
     {
-        built_in[0].qubit_operands[0] = block.anticontrols[i];
+        x_gate[0].qubit_operands[0] = block.anticontrols[i];
         
-        process_blocks(qasm, built_in, variables, num_qubits, undefined);
+        process_blocks(qasm, x_gate, variables, num_qubits, undefined);
     }
 
     let controls = [...block.controls, ...block.anticontrols];
     qasm.push([`ccx q[${controls[0]}], q[${controls[1]}], anc[0];\n`, block.block_id]);
 
+    // ccx gates
     for(let i = 2; i < controls.length; i++)
     {
         qasm.push([`ccx q[${controls[i]}], anc[${i-2}], anc[${i-1}];\n`, block.block_id]);
@@ -954,17 +1012,26 @@ function n_bit_cgate_to_qasm(block, variables, num_qubits)
 
     num_qubits[1] = Math.max(num_qubits[1], controls.length-1);
 
-    qasm.push([`${block.gate_name} anc[${controls.length-1}], q[${block.target}];\n`]);
+    qasm.push([`cx anc[${controls.length-1}], q[${block.target}];\n`]);
+
+    // ccx gates 
+    for(let i = controls.length - 1; i >= 2; i--)
+    {
+        qasm.push([`ccx q[${controls[i]}], anc[${i-2}], anc[${i-1}];\n`, block.block_id]);
+    }
+
+    qasm.push([`ccx q[${controls[0]}], q[${controls[1]}], anc[0];\n`, block.block_id]);
 
     // invert anticontrols again, to bring them back to normal
     for(let i = 0; i < block.anticontrols.length; i++)
     {
-        built_in[0].qubit_operands[0] = block.anticontrols[i];
+        x_gate[0].qubit_operands[0] = block.anticontrols[i];
         
-        process_blocks(qasm, built_in, variables, num_qubits, undefined);
+        process_blocks(qasm, x_gate, variables, num_qubits, undefined);
     }
     return qasm;
 }
+
 
 export {generate_QASM, 
     built_in_gate_block, 
@@ -977,5 +1044,5 @@ export {generate_QASM,
     loop_block,
     custom_function_def,
     custom_function_ref,
-    n_bit_controlled_gate};
+    n_bit_toffoli};
 
