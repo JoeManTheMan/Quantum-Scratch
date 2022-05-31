@@ -965,6 +965,11 @@ function loop_block_to_qasm(block, variables, num_qubits, functions)
         process_blocks(gate_qasm, block.blocks, variables, num_qubits, functions);
     }
 
+    //push id to the end of each block
+    for(let qasm of gate_qasm)
+    {
+        qasm.push(block.block_id);
+    }
     return gate_qasm;
 }
 
@@ -984,6 +989,13 @@ function custom_function_to_qasm(block, variables, num_qubits, functions)
 
     process_blocks(gate_qasm, block.blocks, variables, num_qubits, functions);
 
+    //push id to the end of each block
+    console.log("gate_qasm");
+    console.log(gate_qasm);
+    for(let qasm of gate_qasm)
+    {
+        qasm.push(block.block_id);
+    }
     return gate_qasm;
 }
 
@@ -1012,7 +1024,7 @@ function n_bit_toffoli_to_qasm(block, variables, num_qubits)
 
     num_qubits[1] = Math.max(num_qubits[1], controls.length-1);
 
-    qasm.push([`cx anc[${controls.length-1}], q[${block.target}];\n`]);
+    qasm.push([`cx anc[${controls.length-1}], q[${block.target}];\n`, block.block_id]);
 
     // ccx gates 
     for(let i = controls.length - 1; i >= 2; i--)
@@ -1029,6 +1041,8 @@ function n_bit_toffoli_to_qasm(block, variables, num_qubits)
         
         process_blocks(qasm, x_gate, variables, num_qubits, undefined);
     }
+
+    
     return qasm;
 }
 
