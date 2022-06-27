@@ -11,6 +11,8 @@
 //     custom_function_ref,
 //     n_bit_controlled_gate} from '../QasmStuff/QASM_generator.js';
 
+//     import QuantumCircuit from 'quantum-circuit';
+
 // function qasmConverter(blocks){    
 //     var beginning_blocks = JSON.stringify(blocks, null, ' ');
 
@@ -18,22 +20,22 @@
 //     var num_qubits = 6;
 
 //     var start = performance.now();
-//     var {qasm, errors} = generate_QASM(blocks, num_qubits);
 //     console.log("qasm");
 //     console.log(qasm);
-//     //qasm = qasm.reduce((previous_string, current_string) => previous_string + current_string[0]);
+//     let {qasm, errors} = generate_QASM(blocks);
+//     let qasm_string = qasm.reduce((previous_string, current_string) => previous_string + current_string[0]);
 //     var end = performance.now();
 
 //     console.log(`time taken is ${end - start} ms`);
 
 //     var end_blocks = JSON.stringify(blocks, null, ' ');
 
-//     if(beginning_blocks != end_blocks)
+//     if(beginning_blocks != qasm_string)
 //     {
 //         console.log("beginning blocks");
 //         console.log(beginning_blocks);
 //         console.log("end blocks");
-//         console.log(end_blocks);
+//         console.log(qasm_string);
 //     } else
 //     {
 //         console.log("hooray, beginning blocks is identical to ending blocks");

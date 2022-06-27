@@ -49,7 +49,7 @@ class App extends React.Component {
     //console.log(code);
     //console.log(blocks)
     console.log(generate_QASM(blocks, 6));
-    //qasmConverter(blocks);
+    // qasmConverter(blocks);
   }
 
   render() {

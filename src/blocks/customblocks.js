@@ -118,6 +118,29 @@ Blockly.Blocks['test_addition'] = {
   }
 };
 
+var Param_Input = {
+  "type": "param_input",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": " ParamInput",
+      "text": ""
+    }
+  ],
+  "inputsInline": true,
+  "output": null,
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}
+
+Blockly.Blocks['param_input'] = {
+  init: function() {
+    this.jsonInit(Param_Input)
+  }
+};
+
 var one = {
   "type": "number_type",
   "message0": "%1",
@@ -309,10 +332,22 @@ Blockly.Blocks['test_hadamard_gate'] = { //https://blockly-demo.appspot.com/stat
 
 var U3_gate = {
   "type": "u3_gate",
-  "message0": "U3-Gate: Qubit %1 %2",
+  "message0": "U3-Gate: %1 Param 1 %2 Param 2 %3 Param 3 %4 Qubit %5",
   "args0": [
     {
       "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 1"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 2"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 3"
     },
     {
       "type": "input_value",
@@ -327,7 +362,7 @@ var U3_gate = {
   "helpUrl": ""
 }
 
-Blockly.Blocks['u3_gate'] = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#p2rukd
+Blockly.Blocks['u3_gate'] = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#eynyor
   init: function() {
     this.jsonInit(U3_gate)
   }
@@ -335,10 +370,18 @@ Blockly.Blocks['u3_gate'] = { //https://blockly-demo.appspot.com/static/demos/bl
 
 var U2_gate = {
   "type": "u2_gate",
-  "message0": "U2-Gate: Qubit %1 %2",
+  "message0": "U2-Gate: %1 Param 1 %2 Param 2 %3 Qubit %4",
   "args0": [
     {
       "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 1"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 2"
     },
     {
       "type": "input_value",
@@ -353,18 +396,22 @@ var U2_gate = {
   "helpUrl": ""
 }
 
-Blockly.Blocks['u2_gate'] = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#925ze9
+Blockly.Blocks['u2_gate'] = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#hhbmk6
   init: function() {
     this.jsonInit(U2_gate)
   }
 };
 
 var U1_gate = {
-  "type": "u1__gate",
-  "message0": "U1-Gate: Qubit %1 %2",
+  "type": "u1_gate",
+  "message0": "U1-Gate: %1 Param 1 %2 Qubit %3",
   "args0": [
     {
       "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 1"
     },
     {
       "type": "input_value",
@@ -379,7 +426,7 @@ var U1_gate = {
   "helpUrl": ""
 }
 
-Blockly.Blocks['u1_gate'] = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#npnejq
+Blockly.Blocks['u1_gate'] = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#dknmvh
   init: function() {
     this.jsonInit(U1_gate)
   }
@@ -547,10 +594,14 @@ Blockly.Blocks['tdg_gate'] = {
 
 var RX_gate = {
   "type": "rx_gate",
-  "message0": "RX-Gate: %1 Qubit %2",
+  "message0": "RX-Gate: %1 Param 1 %2 Qubit %3",
   "args0": [
     {
       "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 1"
     },
     {
       "type": "input_value",
@@ -565,7 +616,7 @@ var RX_gate = {
   "helpUrl": ""
 }
 
-Blockly.Blocks['rx_gate'] = { 
+Blockly.Blocks['rx_gate'] = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#gmv2qz
   init: function() {
     this.jsonInit(RX_gate)
   }
@@ -573,10 +624,14 @@ Blockly.Blocks['rx_gate'] = {
 
 var RY_gate = {
   "type": "ry_gate",
-  "message0": "RY-Gate: %1 Qubit %2",
+  "message0": "RY-Gate: %1 Param 1 %2 Qubit %3",
   "args0": [
     {
       "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 1"
     },
     {
       "type": "input_value",
@@ -591,7 +646,7 @@ var RY_gate = {
   "helpUrl": ""
 }
 
-Blockly.Blocks['ry_gate'] = { 
+Blockly.Blocks['ry_gate'] = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#pabgmm
   init: function() {
     this.jsonInit(RY_gate)
   }
@@ -599,10 +654,14 @@ Blockly.Blocks['ry_gate'] = {
 
 var RZ_gate = {
   "type": "rz_gate",
-  "message0": "RZ-Gate: %1 Qubit %2",
+  "message0": "RZ-Gate: %1 Param 1 %2 Qubit %3",
   "args0": [
     {
       "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 1"
     },
     {
       "type": "input_value",
@@ -617,7 +676,7 @@ var RZ_gate = {
   "helpUrl": ""
 }
 
-Blockly.Blocks['rz_gate'] = { 
+Blockly.Blocks['rz_gate'] = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#5dptcp
   init: function() {
     this.jsonInit(RZ_gate)
   }
@@ -715,10 +774,14 @@ Blockly.Blocks['ch_gate'] = {
 
 var CRZ_gate = {
   "type": "crz_gate",
-  "message0": "CRZ-Gate: %1 Qubit-1 %2 Qubit-2 %3",
+  "message0": "RZ-Gate: %1 Param 1 %2 Qubit-1 %3 Qubit-2 %4",
   "args0": [
     {
       "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 1"
     },
     {
       "type": "input_value",
@@ -737,7 +800,7 @@ var CRZ_gate = {
   "helpUrl": ""
 }
 
-Blockly.Blocks['crz_gate'] = { 
+Blockly.Blocks['crz_gate'] = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#h328w5
   init: function() {
     this.jsonInit(CRZ_gate)
   }
@@ -745,10 +808,14 @@ Blockly.Blocks['crz_gate'] = {
 
 var CU1_gate = {
   "type": "cu1_gate",
-  "message0": "CU1-Gate: %1 Qubit-1 %2 Qubit-2 %3",
+  "message0": "CU1-Gate: %1 Param 1 %2 Qubit-1 %3 Qubit-2 %4",
   "args0": [
     {
       "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 1"
     },
     {
       "type": "input_value",
@@ -767,7 +834,7 @@ var CU1_gate = {
   "helpUrl": ""
 }
 
-Blockly.Blocks['cu1_gate'] = { 
+Blockly.Blocks['cu1_gate'] = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#rxppai
   init: function() {
     this.jsonInit(CU1_gate)
   }
@@ -775,10 +842,22 @@ Blockly.Blocks['cu1_gate'] = {
 
 var CU3_gate = {
   "type": "cu3_gate",
-  "message0": "CU3-Gate: %1 Qubit-1 %2 Qubit-2 %3",
+  "message0": "CU3-Gate: %1 Param 1 %2 Param 2 %3 Param 3 %4 Qubit-1 %5 Qubit-2 %6",
   "args0": [
     {
       "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 1"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 2"
+    },
+    {
+      "type": "input_value",
+      "name": "Param 3"
     },
     {
       "type": "input_value",
@@ -797,7 +876,7 @@ var CU3_gate = {
   "helpUrl": ""
 }
 
-Blockly.Blocks['cu3_gate'] = { 
+Blockly.Blocks['cu3_gate'] = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#sknoba
   init: function() {
     this.jsonInit(CU3_gate)
   }

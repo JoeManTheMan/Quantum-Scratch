@@ -26,6 +26,14 @@ Blockly.JavaScript['test_addition'] = function(block) {
     return [code, Blockly.JavaScript.ORDER_NONE];
   };
 
+Blockly.JavaScript['param_input'] = function(block) {
+  var text__paraminput = block.getFieldValue(' ParamInput');
+  // TODO: Assemble JavaScript into code variable.
+  var code = text__paraminput;
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+};
+
 Blockly.JavaScript['test_one'] = function(block) {
     var text_num = block.getFieldValue('NUM');
     // TODO: Assemble JavaScript into code variable.
@@ -76,20 +84,26 @@ Blockly.JavaScript['test_one'] = function(block) {
   };
 
   Blockly.JavaScript['u3_gate'] = function(block) {
+    var value_param_1 = Blockly.JavaScript.valueToCode(block, 'Param 1', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_param_2 = Blockly.JavaScript.valueToCode(block, 'Param 2', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_param_3 = Blockly.JavaScript.valueToCode(block, 'Param 3', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
-    blocks.push(new built_in_gate_block('u3', Math.random, [3], [parseInt(value_qubit)]));
+    blocks.push(new built_in_gate_block('u3', Math.random, [parseInt(value_param_1), parseInt(value_param_2), parseInt(value_param_3)], [parseInt(value_qubit)]));;
     return "U3";
-  };
+  }
 
   Blockly.JavaScript['u2_gate'] = function(block) {
+    var value_param_1 = Blockly.JavaScript.valueToCode(block, 'Param 1', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_param_2 = Blockly.JavaScript.valueToCode(block, 'Param 2', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
-    blocks.push(new built_in_gate_block('u2', Math.random, [2], [parseInt(value_qubit)]));
+    blocks.push(new built_in_gate_block('u2', Math.random, [parseInt(value_param_1), parseInt(value_param_2)], [parseInt(value_qubit)]));;
     return "U2";
   };
 
   Blockly.JavaScript['u1_gate'] = function(block) {
+    var value_param_1 = Blockly.JavaScript.valueToCode(block, 'Param 1', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
-    blocks.push(new built_in_gate_block('u1', Math.random, [1], [parseInt(value_qubit)]));
+    blocks.push(new built_in_gate_block('u1', Math.random, [parseInt(value_param_1)], [parseInt(value_qubit)]));;
     return "U1";
   };
 
@@ -131,20 +145,23 @@ Blockly.JavaScript['test_one'] = function(block) {
   };
 
   Blockly.JavaScript['rx_gate'] = function(block) {
+    var value_param_1 = Blockly.JavaScript.valueToCode(block, 'Param 1', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
-    blocks.push(new built_in_gate_block('rx', Math.random, [1], [parseInt(value_qubit)]));
+    blocks.push(new built_in_gate_block('rx', Math.random, [parseInt(value_param_1)], [parseInt(value_qubit)]));;
     return "RX";
   };
 
   Blockly.JavaScript['ry_gate'] = function(block) {
+    var value_param_1 = Blockly.JavaScript.valueToCode(block, 'Param 1', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
-    blocks.push(new built_in_gate_block('ry', Math.random, [1], [parseInt(value_qubit)]));
+    blocks.push(new built_in_gate_block('ry', Math.random, [parseInt(value_param_1)], [parseInt(value_qubit)]));;
     return "RY";
   };
 
   Blockly.JavaScript['rz_gate'] = function(block) {
+    var value_param_1 = Blockly.JavaScript.valueToCode(block, 'Param 1', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
-    blocks.push(new built_in_gate_block('rz', Math.random, [1], [parseInt(value_qubit)]));
+    blocks.push(new built_in_gate_block('rz', Math.random, [parseInt(value_param_1)], [parseInt(value_qubit)]));;
     return "RZ";
   };
 
@@ -170,23 +187,28 @@ Blockly.JavaScript['test_one'] = function(block) {
   };
 
   Blockly.JavaScript['crz_gate'] = function(block) {
+    var value_param_1 = Blockly.JavaScript.valueToCode(block, 'Param 1', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit_1 = Blockly.JavaScript.valueToCode(block, 'Qubit-1', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit_2 = Blockly.JavaScript.valueToCode(block, 'Qubit-2', Blockly.JavaScript.ORDER_ATOMIC);
-    blocks.push(new built_in_gate_block('crz', Math.random, [1], [parseInt(value_qubit_1),parseInt(value_qubit_2)]));
+    blocks.push(new built_in_gate_block('crz', Math.random, [parseInt(value_param_1)], [parseInt(value_qubit_1), parseInt(value_qubit_2)]));;
     return "CRZ";
   };
 
   Blockly.JavaScript['cu1_gate'] = function(block) {
+    var value_param_1 = Blockly.JavaScript.valueToCode(block, 'Param 1', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit_1 = Blockly.JavaScript.valueToCode(block, 'Qubit-1', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit_2 = Blockly.JavaScript.valueToCode(block, 'Qubit-2', Blockly.JavaScript.ORDER_ATOMIC);
-    blocks.push(new built_in_gate_block('cu1', Math.random, [1], [parseInt(value_qubit_1),parseInt(value_qubit_2)]));
+    blocks.push(new built_in_gate_block('cu1', Math.random, [parseInt(value_param_1)], [parseInt(value_qubit_1), parseInt(value_qubit_2)]));;
     return "CU1";
   };
 
   Blockly.JavaScript['cu3_gate'] = function(block) {
+    var value_param_1 = Blockly.JavaScript.valueToCode(block, 'Param 1', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_param_2 = Blockly.JavaScript.valueToCode(block, 'Param 2', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_param_3 = Blockly.JavaScript.valueToCode(block, 'Param 3', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit_1 = Blockly.JavaScript.valueToCode(block, 'Qubit-1', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit_2 = Blockly.JavaScript.valueToCode(block, 'Qubit-2', Blockly.JavaScript.ORDER_ATOMIC);
-    blocks.push(new built_in_gate_block('cu3', Math.random, [3], [parseInt(value_qubit_1),parseInt(value_qubit_2)]));
+    blocks.push(new built_in_gate_block('cu3', Math.random, [parseInt(value_param_1), parseInt(value_param_2), parseInt(value_param_3)], [parseInt(value_qubit_1), parseInt(value_qubit_2)]));;
     return "CU3";
   };
 
