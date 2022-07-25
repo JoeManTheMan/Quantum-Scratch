@@ -35,11 +35,16 @@ import './generator/generator';
 import blocks from './generator/generator';
 import generate_QASM from './QasmStuff/QASM_generator';
 import qasmConverter from './QasmStuff/qasm_Converter';
+import ProbabilitiesGraph, {testData} from './visualisations/graph';
+
+
+
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.simpleWorkspace = React.createRef();
+    this.state = {data: []};
   }
 
   generateCode = () => {
@@ -49,7 +54,12 @@ class App extends React.Component {
     //console.log(code);
     //console.log(blocks)
     console.log(generate_QASM(blocks, 6));
-    // qasmConverter(blocks);
+    //qasmConverter(blocks);
+  }
+
+  updateGraphState = (graphData) => 
+  {
+    this.setState({data: graphData});
   }
 
   render() {
@@ -58,41 +68,49 @@ class App extends React.Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <button onClick={this.generateCode}>Convert</button>
-          <BlocklyComponent ref={this.simpleWorkspace}
-          readOnly={false} trashcan={true} media={'media/'}
-          move={{
-            scrollbars: true,
-            drag: true,
-            wheel: true
-          }}
-          >
-            <Block type="test_input" />
-            <Block type="test_x_gate" />
-            <Block type="test_y_gate" />
-            <Block type="test_z_gate" />
-            <Block type="test_hadamard_gate" />
-            <Block type="u3_gate" />
-            <Block type="u2_gate" />
-            <Block type="u1_gate" />
-            <Block type="cx_gate" />
-            <Block type="id_gate" />
-            <Block type="s_gate" />
-            <Block type="sdg_gate" />
-            <Block type="t_gate" />
-            <Block type="tdg_gate" />
-            <Block type="rx_gate" />
-            <Block type="ry_gate" />
-            <Block type="rz_gate" />
-            <Block type="cz_gate" />
-            <Block type="cy_gate" />
-            <Block type="ch_gate" />
-            <Block type="crz_gate" />
-            <Block type="cu1_gate" />
-            <Block type="cu3_gate" />
-            <Block type="ccx_gate" />
-            
-          </BlocklyComponent>
+          <button onClick={() => this.updateGraphState(testData)}> Update Graph </button>
         </header>
+        <div >
+        <BlocklyComponent ref={this.simpleWorkspace}
+        readOnly={false} trashcan={true} media={'media/'}
+        move={{
+          scrollbars: true,
+          drag: true,
+          wheel: true
+        }}
+        >
+          <Block type="test_input" />
+          <Block type="test_x_gate" />
+          <Block type="test_y_gate" />
+          <Block type="test_z_gate" />
+          <Block type="test_hadamard_gate" />
+          <Block type="u3_gate" />
+          <Block type="u2_gate" />
+          <Block type="u1_gate" />
+          <Block type="cx_gate" />
+          <Block type="id_gate" />
+          <Block type="s_gate" />
+          <Block type="sdg_gate" />
+          <Block type="t_gate" />
+          <Block type="tdg_gate" />
+          <Block type="rx_gate" />
+          <Block type="ry_gate" />
+          <Block type="rz_gate" />
+          <Block type="cz_gate" />
+          <Block type="cy_gate" />
+          <Block type="ch_gate" />
+          <Block type="crz_gate" />
+          <Block type="cu1_gate" />
+          <Block type="cu3_gate" />
+          <Block type="ccx_gate" />
+          
+        </BlocklyComponent>
+        </div>
+
+        <div>
+          <ProbabilitiesGraph data={this.state.data} />
+        </div>
+        
       </div>
     );
   }
