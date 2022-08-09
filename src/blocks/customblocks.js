@@ -916,5 +916,165 @@ Blockly.Blocks['ccx_gate'] = {
   }
 };
 
+var Var_Def_gate = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#ioeewa
+  "type": "var_def_gate",
+  "message0": "Def %1 %2 %3",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "NAME",
+      "text": "Name"
+    },
+    {
+      "type": "field_input",
+      "name": "INPUT",
+      "text": "Value"
+    },
+    {
+      "type": "field_dropdown",
+      "name": "TYPE",
+      "options": [
+        [
+          "integer",
+          "INTEGER"
+        ],
+        [
+          "int_list",
+          "INT_LIST"
+        ],
+        [
+          "angle",
+          "ANGLE"
+        ],
+        [
+          "angle_list",
+          "ANGLE_LIST"
+        ]
+      ]
+    }
+  ],
+  "inputsInline": true,
+  "output": null,
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}
 
+Blockly.Blocks['var_def_gate'] = { 
+  init: function() {
+    this.jsonInit(Var_Def_gate)
+  }
+};
 
+var Var_Ref_gate = {
+  "type": "var_ref_gate",
+  "message0": "Ref %1",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "NAME",
+      "text": "Name"
+    }
+  ],
+  "inputsInline": true,
+  "output": null,
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}
+
+Blockly.Blocks['var_ref_gate'] = { 
+  init: function() {
+    this.jsonInit(Var_Ref_gate)
+  }
+};
+
+var Assignment_Block = {  //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#rqbpa4
+  "type": "assignment_block",
+  "message0": "Assignment Block %1 %2 %3 LHS %4 RHS %5",
+  "args0": [
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "field_input",
+      "name": "NAME",
+      "text": "Name"
+    },
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "lhs"
+    },
+    {
+      "type": "input_value",
+      "name": "rhs"
+    }
+  ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}
+
+Blockly.Blocks['assignment_block'] = { 
+  init: function() {
+    this.jsonInit(Assignment_Block)
+  }
+};
+
+var Expression_Block = {
+  "type": "expression_block",
+  "message0": "Expression Block %1 %2 %3 %4 %5 %6",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "NAME",
+      "text": "Name"
+    },
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "VAR1"
+    },
+    {
+      "type": "field_dropdown",
+      "name": "OPERATOR",
+      "options": [
+        [
+          "+",
+          "ADDITION"
+        ],
+        [
+          "-",
+          "SUBTRACTION"
+        ]
+      ]
+    },
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "VAR2"
+    }
+  ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}
+
+Blockly.Blocks['expression_block'] = { 
+  init: function() {
+    this.jsonInit(Expression_Block)
+  }
+};

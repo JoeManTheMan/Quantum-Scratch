@@ -1,63 +1,65 @@
-// import {generate_QASM, 
-//     built_in_gate_block, 
-//     var_def_block, 
-//     var_ref_block, 
-//     var_assignment_block, 
-//     measurement_block,
-//     if_block, 
-//     expression_block,
-//     loop_block,
-//     custom_function_def,
-//     custom_function_ref,
-//     n_bit_controlled_gate} from '../QasmStuff/QASM_generator.js';
+import {generate_QASM, 
+    built_in_gate_block, 
+    var_def_block, 
+    var_ref_block, 
+    var_assignment_block, 
+    measurement_block,
+    if_block, 
+    expression_block,
+    loop_block,
+    custom_function_def,
+    custom_function_ref,
+    n_bit_controlled_gate} from '../QasmStuff/QASM_generator.js';
 
-//     import QuantumCircuit from 'quantum-circuit';
+    var QuantumCircuit = require("quantum-circuit");
+    //import QuantumCircuit from 'quantum-circuit';
 
-// function qasmConverter(blocks){    
-//     var beginning_blocks = JSON.stringify(blocks, null, ' ');
+function qasmConverter(blocks){    
+    var beginning_blocks = JSON.stringify(blocks, null, ' ');
 
-//     var circuit = new QuantumCircuit;
-//     var num_qubits = 6;
+    
+    var circuit = new QuantumCircuit;
+    var num_qubits = 6;
 
-//     var start = performance.now();
-//     console.log("qasm");
-//     console.log(qasm);
-//     let {qasm, errors} = generate_QASM(blocks);
-//     let qasm_string = qasm.reduce((previous_string, current_string) => previous_string + current_string[0]);
-//     var end = performance.now();
+    var start = performance.now();
+    let {qasm, errors} = generate_QASM(blocks);
+    let qasm_string = qasm.reduce((previous_string, current_string) => previous_string + current_string[0]);
 
-//     console.log(`time taken is ${end - start} ms`);
+    var end = performance.now();
 
-//     var end_blocks = JSON.stringify(blocks, null, ' ');
+    console.log(`time taken is ${end - start} ms`);
 
-//     if(beginning_blocks != qasm_string)
-//     {
-//         console.log("beginning blocks");
-//         console.log(beginning_blocks);
-//         console.log("end blocks");
-//         console.log(qasm_string);
-//     } else
-//     {
-//         console.log("hooray, beginning blocks is identical to ending blocks");
-//         // console.log(beginning_blocks);
-//     }
+    var end_blocks = JSON.stringify(blocks, null, ' ');
 
-//     console.log(qasm);
-//     circuit.importQASM(qasm, function(errors) {
-//         console.log(errors);
-//     });
+    if(beginning_blocks != end_blocks)
+        {
+            console.log("beginning blocks");
+            console.log(beginning_blocks);
+            console.log("end blocks");
+            console.log(end_blocks);
+        } 
+    else
+        {
+            console.log("hooray, beginning blocks is identical to ending blocks");
+            // console.log(beginning_blocks);
+        }
 
-//     circuit.run();
+    console.log(qasm);
+    circuit.importQASM(qasm, function(errors) {
+        console.log(errors);
+    });
 
-//     console.log(circuit.exportToQASM());
+    console.log(circuit.run());
 
-//     var test_circuit = new QuantumCircuit;
-//     //test_circuit.addGate("x", 0, 0);
-//     test_circuit.run([1, 0]);
-//     console.log(test_circuit.stateAsArray());
-//     console.log(test_circuit.exportToQASM());
+    console.log(circuit.exportToQASM());
 
-//     console.log(errors);
-// }
+    var test_circuit = new QuantumCircuit;
+    //test_circuit.addGate("x", 0, 0);
+    test_circuit.run([1, 0]);
+    console.log(test_circuit.stateAsArray());
+    console.log(test_circuit.exportToQASM());
 
-// export default qasmConverter;
+    console.log(errors);
+}
+
+export default qasmConverter;

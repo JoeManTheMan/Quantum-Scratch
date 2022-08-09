@@ -26,7 +26,7 @@ import './App.css';
 
 import logo from './logo.svg';
 
-import BlocklyComponent, { Block, Value, Field, Shadow } from './Blockly';
+import BlocklyComponent, { Block, Value, Field, Shadow, Category } from './Blockly';
 
 import BlocklyJS from 'blockly/javascript';
 
@@ -49,7 +49,7 @@ class App extends React.Component {
     //console.log(code);
     //console.log(blocks)
     console.log(generate_QASM(blocks, 6));
-    // qasmConverter(blocks);
+    qasmConverter(blocks);
   }
 
   render() {
@@ -66,6 +66,7 @@ class App extends React.Component {
             wheel: true
           }}
           >
+          <Category name="Built_in_gate_blocks">
             <Block type="test_input" />
             <Block type="test_x_gate" />
             <Block type="test_y_gate" />
@@ -90,7 +91,13 @@ class App extends React.Component {
             <Block type="cu1_gate" />
             <Block type="cu3_gate" />
             <Block type="ccx_gate" />
-            
+          </Category>
+          <Category name="Variable_Blocks">
+            <Block type="var_def_gate" />
+            <Block type="var_ref_gate" />
+            <Block type="assignment_block" />
+            <Block type="expression_block" />
+          </Category>
           </BlocklyComponent>
         </header>
       </div>

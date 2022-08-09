@@ -220,3 +220,33 @@ Blockly.JavaScript['test_one'] = function(block) {
     return "CCX";
   };
   
+  Blockly.JavaScript['var_def_gate'] = function(block) {
+    var text_name = block.getFieldValue('NAME');
+    var text_input = block.getFieldValue('INPUT');
+    var dropdown_type = block.getFieldValue('TYPE');
+    new var_def_block(text_name, Math.random, dropdown_type, text_input);
+    return "VAR";
+  };
+
+  Blockly.JavaScript['var_ref_gate'] = function(block) {
+    var text_name = block.getFieldValue('NAME');
+    new var_ref_block(text_name, Math.random);
+    return "REF";
+  };
+
+  Blockly.JavaScript['assignment_block'] = function(block) {
+    var text_name = block.getFieldValue('NAME');
+    var value_lhs = Blockly.JavaScript.valueToCode(block, 'lhs', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_rhs = Blockly.JavaScript.valueToCode(block, 'rhs', Blockly.JavaScript.ORDER_ATOMIC);
+    new var_assignment_block(text_name, Math.random, value_lhs, value_rhs);
+    return "ASS";
+  };
+
+  Blockly.JavaScript['expression_block'] = function(block) {
+    var text_name = block.getFieldValue('NAME');
+    var value_var1 = Blockly.JavaScript.valueToCode(block, 'VAR1', Blockly.JavaScript.ORDER_ATOMIC);
+    var dropdown_operator = block.getFieldValue('OPERATOR');
+    var value_var2 = Blockly.JavaScript.valueToCode(block, 'VAR2', Blockly.JavaScript.ORDER_ATOMIC);
+    var_assignment_block(text_name, Math.random, dropdown_operator, [value_var1, value_var2]);
+    return "EXP";
+  };
