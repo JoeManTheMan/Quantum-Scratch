@@ -219,8 +219,8 @@ Blockly.JavaScript['test_one'] = function(block) {
     blocks.push(new built_in_gate_block('ccx', Math.random, [0], [parseInt(value_qubit_1),parseInt(value_qubit_2),parseInt(value_qubit_3)]));
     return "CCX";
   };
-  
-  Blockly.JavaScript['var_def_gate'] = function(block) {
+
+  Blockly.JavaScript['var_gate'] = function(block) {
     var text_name = block.getFieldValue('NAME');
     var text_input = block.getFieldValue('INPUT');
     var dropdown_type = block.getFieldValue('TYPE');
@@ -244,9 +244,9 @@ Blockly.JavaScript['test_one'] = function(block) {
 
   Blockly.JavaScript['expression_block'] = function(block) {
     var text_name = block.getFieldValue('NAME');
-    var value_var1 = Blockly.JavaScript.valueToCode(block, 'VAR1', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_lhs = Blockly.JavaScript.valueToCode(block, 'lhs', Blockly.JavaScript.ORDER_ATOMIC);
     var dropdown_operator = block.getFieldValue('OPERATOR');
-    var value_var2 = Blockly.JavaScript.valueToCode(block, 'VAR2', Blockly.JavaScript.ORDER_ATOMIC);
-    var_assignment_block(text_name, Math.random, dropdown_operator, [value_var1, value_var2]);
+    var value_rhs = Blockly.JavaScript.valueToCode(block, 'rhs', Blockly.JavaScript.ORDER_ATOMIC);
+    var_assignment_block(text_name, Math.random, dropdown_operator, [value_lhs, value_rhs]);
     return "EXP";
   };

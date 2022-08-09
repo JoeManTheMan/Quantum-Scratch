@@ -916,9 +916,9 @@ Blockly.Blocks['ccx_gate'] = {
   }
 };
 
-var Var_Def_gate = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#ioeewa
-  "type": "var_def_gate",
-  "message0": "Def %1 %2 %3",
+var Var_Def_gate = {  //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#thggpb
+  "type": "var_gate",
+  "message0": "Variable Definition %1 %2 %3",
   "args0": [
     {
       "type": "field_input",
@@ -954,7 +954,8 @@ var Var_Def_gate = { //https://blockly-demo.appspot.com/static/demos/blockfactor
     }
   ],
   "inputsInline": true,
-  "output": null,
+  "previousStatement": null,
+  "nextStatement": null,
   "colour": 230,
   "tooltip": "",
   "helpUrl": ""
@@ -989,13 +990,10 @@ Blockly.Blocks['var_ref_gate'] = {
   }
 };
 
-var Assignment_Block = {  //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#rqbpa4
+var Assignment_Block = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#f7i8nr
   "type": "assignment_block",
-  "message0": "Assignment Block %1 %2 %3 LHS %4 RHS %5",
+  "message0": "%1 %2 %3 = %4 %5",
   "args0": [
-    {
-      "type": "input_dummy"
-    },
     {
       "type": "field_input",
       "name": "NAME",
@@ -1009,6 +1007,9 @@ var Assignment_Block = {  //https://blockly-demo.appspot.com/static/demos/blockf
       "name": "lhs"
     },
     {
+      "type": "input_dummy"
+    },
+    {
       "type": "input_value",
       "name": "rhs"
     }
@@ -1019,7 +1020,7 @@ var Assignment_Block = {  //https://blockly-demo.appspot.com/static/demos/blockf
   "colour": 230,
   "tooltip": "",
   "helpUrl": ""
-}
+} 
 
 Blockly.Blocks['assignment_block'] = { 
   init: function() {
@@ -1027,9 +1028,9 @@ Blockly.Blocks['assignment_block'] = {
   }
 };
 
-var Expression_Block = {
+var Expression_Block = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#53fu5j
   "type": "expression_block",
-  "message0": "Expression Block %1 %2 %3 %4 %5 %6",
+  "message0": "%1 %2 %3 %4 %5 %6",
   "args0": [
     {
       "type": "field_input",
@@ -1041,7 +1042,7 @@ var Expression_Block = {
     },
     {
       "type": "input_value",
-      "name": "VAR1"
+      "name": "lhs"
     },
     {
       "type": "field_dropdown",
@@ -1062,7 +1063,7 @@ var Expression_Block = {
     },
     {
       "type": "input_value",
-      "name": "VAR2"
+      "name": "rhs"
     }
   ],
   "inputsInline": true,
