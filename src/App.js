@@ -35,11 +35,16 @@ import './generator/generator';
 import blocks from './generator/generator';
 import generate_QASM from './QasmStuff/QASM_generator';
 import qasmConverter from './QasmStuff/qasm_Converter';
+import ProbabilitiesGraph, {testData} from './visualisations/graph';
+
+
+
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.simpleWorkspace = React.createRef();
+    this.state = {data: []};
   }
 
   generateCode = () => {
@@ -50,6 +55,12 @@ class App extends React.Component {
     //console.log(blocks)
     console.log(generate_QASM(blocks, 6));
     qasmConverter(blocks);
+    //qasmConverter(blocks);
+  }
+
+  updateGraphState = (graphData) => 
+  {
+    this.setState({data: graphData});
   }
 
   render() {
@@ -99,7 +110,24 @@ class App extends React.Component {
             <Block type="expression_block" />
           </Category>
           </BlocklyComponent>
+          <button onClick={() => this.updateGraphState(testData)}> Update Graph </button>
         </header>
+        <div >
+        <BlocklyComponent ref={this.simpleWorkspace}
+        readOnly={false} trashcan={true} media={'media/'}
+        move={{
+          scrollbars: true,
+          drag: true,
+          wheel: true
+        }}
+        >
+        </BlocklyComponent>
+        </div>
+
+        <div>
+          <ProbabilitiesGraph data={this.state.data} />
+        </div>
+        
       </div>
     );
   }
