@@ -1079,3 +1079,207 @@ Blockly.Blocks['expression_block'] = {
     this.jsonInit(Expression_Block)
   }
 };
+
+var Measurement_Block = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#a482of
+  "type": "measurement_gate",
+  "message0": "Measurement Block %1 %2 %3 %4",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "NAME",
+      "text": "Name"
+    },
+    {
+      "type": "field_dropdown",
+      "name": "MEASURE_ALL",
+      "options": [
+        [
+          "True",
+          "TRUE"
+        ],
+        [
+          "False",
+          "FALSE"
+        ]
+      ]
+    },
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "QUBIT"
+    }
+  ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}
+
+Blockly.Blocks['measurement_block'] = { 
+  init: function() {
+    this.jsonInit(Measurement_Block)
+  }
+};
+
+var If_Block = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#9xq2zw
+  "type": "if_block",
+  "message0": "If Block %1 %2 Values %3 Gate %4",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "NAME",
+      "text": "Name"
+    },
+    {
+      "type": "input_dummy"
+    },
+    {
+      "type": "input_value",
+      "name": "VALUE"
+    },
+    {
+      "type": "input_value",
+      "name": "GATE"
+    }
+  ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}
+
+Blockly.Blocks['if_block'] = { 
+  init: function() {
+    this.jsonInit(If_Block)
+  }
+};
+
+var Loop_Block = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#4fx65f
+  "type": "loop_block",
+  "message0": "Loops %1 %2",
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "NUM"
+    },
+    {
+      "type": "input_statement",
+      "name": "Blocks"
+    }
+  ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}
+
+Blockly.Blocks['loop_block'] = { 
+  init: function() {
+    this.jsonInit(Loop_Block)
+  }
+};
+
+var Custom_Function_Def = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#nuop5q
+  "type": "custom_function_def",
+  "message0": "Params %1 Operands %2 %3",
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "PARAMS"
+    },
+    {
+      "type": "input_value",
+      "name": "OPERANDS"
+    },
+    {
+      "type": "input_statement",
+      "name": "Blocks"
+    }
+  ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}
+
+Blockly.Blocks['custom_function_def'] = { 
+  init: function() {
+    this.jsonInit(Custom_Function_Def)
+  }
+};
+
+var Custom_Function_Ref = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#d8cc6a
+  "type": "custom_function_ref",
+  "message0": "Custom Function Ref %1 Params %2 Operands %3",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "NAME",
+      "text": "Name"
+    },
+    {
+      "type": "input_value",
+      "name": "PARAMS"
+    },
+    {
+      "type": "input_value",
+      "name": "OPERANDS"
+    }
+  ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}
+
+Blockly.Blocks['custom_function_ref'] = { 
+  init: function() {
+    this.jsonInit(Custom_Function_Ref)
+  }
+};
+
+var N_Bit_Toffoli_To_Qasm = {
+  "type": "n_bit_toffoli_to_qasm",
+  "message0": "N_Bit_Toffoli_To_Qasm - controls %1 anticontrols %2 target %3",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "CONTROLS",
+      "text": ""
+    },
+    {
+      "type": "field_input",
+      "name": "ANTICONTROLS",
+      "text": ""
+    },
+    {
+      "type": "field_input",
+      "name": "TARGET",
+      "text": ""
+    }
+  ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}
+
+Blockly.Blocks['n_bit_toffoli_to_qasm'] = { 
+  init: function() {
+    this.jsonInit(N_Bit_Toffoli_To_Qasm)
+  }
+};

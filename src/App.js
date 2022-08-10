@@ -108,6 +108,12 @@ class App extends React.Component {
             <Block type="var_ref_gate" />
             <Block type="assignment_block" />
             <Block type="expression_block" />
+            <Block type="measurement_block" />
+            <Block type="if_block" />
+            <Block type="loop_block" />
+            <Block type="custom_function_def" />
+            <Block type="custom_function_ref" />
+            <Block type="n_bit_toffoli_to_qasm" />
           </Category>
           </BlocklyComponent>
           <button onClick={() => this.updateGraphState(testData)}> Update Graph </button>

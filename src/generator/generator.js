@@ -11,7 +11,8 @@ import {generate_QASM,
   loop_block,
   custom_function_def,
   custom_function_ref,
-  n_bit_controlled_gate} from '../QasmStuff/QASM_generator.js';
+  n_bit_controlled_gate,
+  n_bit_toffoli} from '../QasmStuff/QASM_generator.js';
 
 
 const blocks = [];
@@ -249,4 +250,51 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_rhs = Blockly.JavaScript.valueToCode(block, 'rhs', Blockly.JavaScript.ORDER_ATOMIC);
     var_assignment_block(text_name, Math.random, dropdown_operator, [value_lhs, value_rhs]);
     return "EXP";
+  };
+
+  Blockly.JavaScript['measurement_gate'] = function(block) {
+    var text_name = block.getFieldValue('NAME');
+    var dropdown_measure_all = block.getFieldValue('MEASURE_ALL');
+    var value_qubit = Blockly.JavaScript.valueToCode(block, 'QUBIT', Blockly.JavaScript.ORDER_ATOMIC);
+    measurement_block(text_name, Math.random, value_qubit, dropdown_measure_all);
+    return "MES";
+  };
+
+  Blockly.JavaScript['if_block'] = function(block) {
+    var text_name = block.getFieldValue('NAME');
+    var value_value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_gate = Blockly.JavaScript.valueToCode(block, 'GATE', Blockly.JavaScript.ORDER_ATOMIC);
+    if_block(text_name, Math.random, value_value, value_gate);
+    return "IF";
+  };
+
+  Blockly.JavaScript['loop_block'] = function(block) {
+    var value_num = Blockly.JavaScript.valueToCode(block, 'NUM', Blockly.JavaScript.ORDER_ATOMIC);
+    var statements_blocks = Blockly.JavaScript.statementToCode(block, 'Blocks');
+    loop_block("", Math.random, value_num, statements_blocks);
+    return "LOOP";
+  };
+
+  Blockly.JavaScript['custom_function_def'] = function(block) {
+    var value_params = Blockly.JavaScript.valueToCode(block, 'PARAMS', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_operands = Blockly.JavaScript.valueToCode(block, 'OPERANDS', Blockly.JavaScript.ORDER_ATOMIC);
+    var statements_blocks = Blockly.JavaScript.statementToCode(block, 'Blocks');
+    custom_function_def("", Math.random, value_params, value_operands, statements_blocks);
+    return "CFD";
+  };
+
+  Blockly.JavaScript['custom_function_ref'] = function(block) {
+    var text_name = block.getFieldValue('NAME');
+    var value_params = Blockly.JavaScript.valueToCode(block, 'PARAMS', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_operands = Blockly.JavaScript.valueToCode(block, 'OPERANDS', Blockly.JavaScript.ORDER_ATOMIC);
+    custom_function_ref(text_name, Math.random, value_params, value_operands);
+    return "CFR";
+  };
+
+  Blockly.JavaScript['n_bit_toffoli_to_qasm'] = function(block) {
+    var text_controls = block.getFieldValue('CONTROLS');
+    var text_anticontrols = block.getFieldValue('ANTICONTROLS');
+    var text_target = block.getFieldValue('TARGET');
+    n_bit_toffoli("", Math.random, text_controls, text_anticontrols, text_target);
+    return "Toffi";
   };
