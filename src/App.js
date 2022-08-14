@@ -109,6 +109,7 @@ class App extends React.Component {
             <Block type="assignment_block" />
             <Block type="expression_block" />
             <Block type="measurement_block" />
+            <Block type="meaurement_block_true" />
             <Block type="if_block" />
             <Block type="loop_block" />
             <Block type="custom_function_def" />

@@ -1080,9 +1080,9 @@ Blockly.Blocks['expression_block'] = {
   }
 };
 
-var Measurement_Block = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#a482of
-  "type": "measurement_gate",
-  "message0": "Measurement Block %1 %2 %3 %4",
+var Measurement_Block_True = {
+  "type": "measurement_gate_true",
+  "message0": "Measurement Block -  True %1 %2",
   "args0": [
     {
       "type": "field_input",
@@ -1090,25 +1090,9 @@ var Measurement_Block = { //https://blockly-demo.appspot.com/static/demos/blockf
       "text": "Name"
     },
     {
-      "type": "field_dropdown",
-      "name": "MEASURE_ALL",
-      "options": [
-        [
-          "True",
-          "TRUE"
-        ],
-        [
-          "False",
-          "FALSE"
-        ]
-      ]
-    },
-    {
-      "type": "input_dummy"
-    },
-    {
-      "type": "input_value",
-      "name": "QUBIT"
+      "type": "field_input",
+      "name": "QUBIT",
+      "text": "Qubit"
     }
   ],
   "inputsInline": true,
@@ -1119,7 +1103,50 @@ var Measurement_Block = { //https://blockly-demo.appspot.com/static/demos/blockf
   "helpUrl": ""
 }
 
-Blockly.Blocks['measurement_block'] = { 
+Blockly.Blocks['measurement_gate_true'] = { 
+  init: function() {
+    this.jsonInit(Measurement_Block_True)
+  }
+};
+
+var Measurement_Block = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#fihfcc
+  "type": "measurement_gate_true",
+  "message0": "Measurement Block -  %1 %2 %3",
+  "args0": [
+    {
+      "type": "field_input",
+      "name": "NAME",
+      "text": "Name"
+    },
+    {
+      "type": "field_dropdown",
+      "name": "NAME",
+      "options": [
+        [
+          "True",
+          "True"
+        ],
+        [
+          "False",
+          "False"
+        ]
+      ]
+    },
+    {
+      "type": "field_input",
+      "name": "QUBIT",
+      "text": "Qubit"
+    }
+  ],
+  "inputsInline": true,
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+}
+
+Blockly.Blocks['measurement_gate'] = { 
   init: function() {
     this.jsonInit(Measurement_Block)
   }
@@ -1187,17 +1214,17 @@ Blockly.Blocks['loop_block'] = {
   }
 };
 
-var Custom_Function_Def = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#nuop5q
+var Custom_Function_Def = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#rwdh63x
   "type": "custom_function_def",
-  "message0": "Params %1 Operands %2 %3",
+  "message0": "Function %1 %2 %3",
   "args0": [
     {
-      "type": "input_value",
-      "name": "PARAMS"
+      "type": "field_input",
+      "name": "NAME",
+      "text": "Name"
     },
     {
-      "type": "input_value",
-      "name": "OPERANDS"
+      "type": "input_dummy"
     },
     {
       "type": "input_statement",
@@ -1218,22 +1245,14 @@ Blockly.Blocks['custom_function_def'] = {
   }
 };
 
-var Custom_Function_Ref = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#d8cc6a
+var Custom_Function_Ref = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#byprkm
   "type": "custom_function_ref",
-  "message0": "Custom Function Ref %1 Params %2 Operands %3",
+  "message0": "Custom Function Ref %1",
   "args0": [
     {
       "type": "field_input",
       "name": "NAME",
       "text": "Name"
-    },
-    {
-      "type": "input_value",
-      "name": "PARAMS"
-    },
-    {
-      "type": "input_value",
-      "name": "OPERANDS"
     }
   ],
   "inputsInline": true,
@@ -1250,24 +1269,24 @@ Blockly.Blocks['custom_function_ref'] = {
   }
 };
 
-var N_Bit_Toffoli_To_Qasm = {
+var N_Bit_Toffoli_To_Qasm = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#decbyb
   "type": "n_bit_toffoli_to_qasm",
-  "message0": "N_Bit_Toffoli_To_Qasm - controls %1 anticontrols %2 target %3",
+  "message0": "N Bit Toffoli To Qasm - %1 Controls %2 AntiControls %3 Target %4",
   "args0": [
     {
-      "type": "field_input",
-      "name": "CONTROLS",
-      "text": ""
+      "type": "input_dummy"
     },
     {
-      "type": "field_input",
-      "name": "ANTICONTROLS",
-      "text": ""
+      "type": "input_value",
+      "name": "CONTROL_QUIBIT"
     },
     {
-      "type": "field_input",
-      "name": "TARGET",
-      "text": ""
+      "type": "input_value",
+      "name": "ANTICONTROL_QUBIT"
+    },
+    {
+      "type": "input_value",
+      "name": "TARGET_QUBIT"
     }
   ],
   "inputsInline": true,
@@ -1276,7 +1295,7 @@ var N_Bit_Toffoli_To_Qasm = {
   "colour": 230,
   "tooltip": "",
   "helpUrl": ""
-}
+} 
 
 Blockly.Blocks['n_bit_toffoli_to_qasm'] = { 
   init: function() {
