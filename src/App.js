@@ -108,8 +108,10 @@ class App extends React.Component {
             <Block type="var_ref_gate" />
             <Block type="assignment_block" />
             <Block type="expression_block" />
-            <Block type="measurement_block" />
-            <Block type="meaurement_block_true" />
+          </Category>
+          <Category name="Temp">
+            <Block type="measurement_gate" />
+            <Block type="measurement_gate_true" />
             <Block type="if_block" />
             <Block type="loop_block" />
             <Block type="custom_function_def" />

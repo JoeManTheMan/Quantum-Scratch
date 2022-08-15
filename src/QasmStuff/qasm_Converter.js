@@ -44,8 +44,8 @@ function qasmConverter(blocks){
             // console.log(beginning_blocks);
         }
 
-    console.log(qasm);
-    circuit.importQASM(qasm, function(errors) {
+    console.log(qasm_string);
+    circuit.importQASM(qasm_string, function(errors) {
         console.log(errors);
     });
 

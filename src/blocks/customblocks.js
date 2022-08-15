@@ -1110,7 +1110,7 @@ Blockly.Blocks['measurement_gate_true'] = {
 };
 
 var Measurement_Block = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#fihfcc
-  "type": "measurement_gate_true",
+  "type": "measurement_gate",
   "message0": "Measurement Block -  %1 %2 %3",
   "args0": [
     {
