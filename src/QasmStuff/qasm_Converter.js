@@ -54,4 +54,16 @@ function qasmConverter(blocks){
     console.log(circuit.exportToQASM());
 }
 
+function generateCircuit(qasm)
+{
+    let circuit = new QuantumCircuit;
+
+    circuit.importQASM(qasm, function(errors) {
+        console.log(errors);
+    });
+    return circuit;
+}
+
 export default qasmConverter;
+
+export {generateCircuit};

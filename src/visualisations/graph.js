@@ -8,8 +8,8 @@ function ProbabilitiesGraph(props)
 {
     
     return (
-        <div className="bar-graph">
-            <ResponsiveContainer width="50%" aspect={2}>
+        <div className="bar-graph" style={{width:"50%"}}>
+            <ResponsiveContainer aspect={2}>
                 <BarChart data={props.data} margin={{
                         top: 5,
                         right: 30,

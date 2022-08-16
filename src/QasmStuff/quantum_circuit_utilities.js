@@ -4,8 +4,14 @@
  */ 
 function get_circuit_properties(circuit)
 {
-    let state = circuit.stateAsArray(true).map((qubit_state) => {
-        console.log(qubit_state);
+    let hideZeroStates = false;
+    if(circuit.numAmplitudes(false) > 8)
+    {
+        hideZeroStates=true;
+    }
+
+
+    let state = circuit.stateAsArray(hideZeroStates).map((qubit_state) => {
         return {vector_string: qubit_state.indexBinStr, 
             vector: qubit_state.index,
             amplitude: qubit_state.amplitude.toPolar(),

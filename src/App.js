@@ -34,8 +34,10 @@ import './blocks/customblocks';
 import './generator/generator';
 import blocks from './generator/generator';
 import generate_QASM from './QasmStuff/QASM_generator';
-import qasmConverter from './QasmStuff/qasm_Converter';
-import ProbabilitiesGraph, {testData} from './visualisations/graph';
+import {generateCircuit} from './QasmStuff/qasm_Converter';
+import get_circuit_properties from './QasmStuff/quantum_circuit_utilities';
+import ProbabilitiesGraph from './visualisations/graph';
+import QasmText from './visualisations/qasm_output';
 
 
 
@@ -44,7 +46,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.simpleWorkspace = React.createRef();
-    this.state = {data: []};
+    this.state = {data: [], qasm: "", circuit:{}};
   }
 
   generateCode = () => {
@@ -55,9 +57,16 @@ class App extends React.Component {
     );
     //console.log(code);
     //console.log(blocks)
-    console.log(generate_QASM(blocks, 6));
-    qasmConverter(blocks);
-    //qasmConverter(blocks);
+    // generate the qasm, 
+    let {qasm, errors} = generate_QASM(blocks);
+    let qasm_string = qasm.reduce((previous_string, current_string) => previous_string + current_string[0]);
+    console.log(errors);
+    this.updateQasmBox(qasm_string);
+
+    // create the circuit, run it, use its properties to update the graph
+    let circuit = generateCircuit(qasm_string);
+    this.updateCircuit(circuit);
+    this.updateGraphState(get_circuit_properties(circuit));
   }
 
   updateGraphState = (graphData) => 
@@ -65,13 +74,22 @@ class App extends React.Component {
     this.setState({data: graphData});
   }
 
+  updateQasmBox = (qasm) => 
+  {
+    this.setState({qasm: qasm});
+  }
+
+  updateCircuit = (circuit) => 
+  {
+    this.setState({circuit: circuit});
+  }
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <button onClick={this.generateCode}>Convert</button>
-          <button onClick={() => this.updateGraphState(testData)}> Update Graph </button>
+          <button onClick={this.generateCode}> Compile and run </button>
           <BlocklyComponent ref={this.simpleWorkspace}
           readOnly={false} trashcan={true} media={'media/'}
           move={{
@@ -124,8 +142,9 @@ class App extends React.Component {
           </BlocklyComponent>
         </header>
 
-        <div>
+        <div className="outputs">
           <ProbabilitiesGraph data={this.state.data} />
+          <QasmText qasm={this.state.qasm}/>
         </div>
         
       </div>

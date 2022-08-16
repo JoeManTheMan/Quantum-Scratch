@@ -19,6 +19,21 @@
   color: #61dafb;
 }
 
+.outputs {
+  display: flex;
+  flex-direction: row;
+}
+
+.qasm-output {
+  border-color: grey;
+  border-style: solid;
+  border-width: 3px;
+  flex-grow: 1;
+  margin: 5px;
+  padding: 5px 10px;
+  background: #EEEEEE;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

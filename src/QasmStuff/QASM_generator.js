@@ -364,6 +364,8 @@ const error_types =
     duplicate_fun_defs: "function is defined more than once",
 
     unsupported_operator: "operator is not supported",
+    
+    unsupported_block: "block is not supported, or has wrong type",
 
     invalid_if: "if block is not valid, check that the value is an integer greater than 0",
     invalid_loop: "loop block is not valid, check that loop count is an integer"
@@ -395,7 +397,7 @@ function generate_QASM(blocks)
 
     // first value is the qubits in q, the qubits being operated on
     // second value is the qubits in anc, an ancilla qreg
-    let num_qubits = [0, 0]; 
+    let num_qubits = [-1, -1]; 
     
     let qasm = [["OPENQASM 2.0;\ninclude \"qelib1.inc\";\n"]];
     qasm.push(["qreg q["]); // these will be filled in later with the max value of qubits
@@ -404,6 +406,7 @@ function generate_QASM(blocks)
 
     // goes over each block, adding their respective qasm to the qasm array
     // 1 is added to num_qubits because it is set to the value of the highest qubit operand but is 0 indexed
+
     process_blocks(qasm, blocks, variables, num_qubits, functions);
     num_qubits[0] += 1;
     num_qubits[1] += 1;
@@ -504,7 +507,7 @@ function process_blocks(qasm, blocks, variables, num_qubits, functions, type_res
                 qasm.push(...n_bit_toffoli_to_qasm(blocks[i], variables, num_qubits));
             }
             default:
-                //console.log("something went wrong");
+                errors.push([error_types.unsupported_block, blocks[i]]);
                 break;
         }
     }
@@ -824,7 +827,7 @@ function expand_if_variables(block, variables)
     let expanded_block = {};
 
     copy_block(expanded_block, block);
-
+ 
     if("values" in expanded_block)
     {
         expand_array_vars(expanded_block.values, variables, "integer");
@@ -965,6 +968,11 @@ function loop_block_to_qasm(block, variables, num_qubits, functions)
         process_blocks(gate_qasm, block.blocks, variables, num_qubits, functions);
     }
 
+    //push id to the end of each block
+    for(let qasm of gate_qasm)
+    {
+        qasm.push(block.block_id);
+    }
     return gate_qasm;
 }
 
@@ -984,6 +992,13 @@ function custom_function_to_qasm(block, variables, num_qubits, functions)
 
     process_blocks(gate_qasm, block.blocks, variables, num_qubits, functions);
 
+    //push id to the end of each block
+    console.log("gate_qasm");
+    console.log(gate_qasm);
+    for(let qasm of gate_qasm)
+    {
+        qasm.push(block.block_id);
+    }
     return gate_qasm;
 }
 
@@ -1012,7 +1027,7 @@ function n_bit_toffoli_to_qasm(block, variables, num_qubits)
 
     num_qubits[1] = Math.max(num_qubits[1], controls.length-1);
 
-    qasm.push([`cx anc[${controls.length-1}], q[${block.target}];\n`]);
+    qasm.push([`cx anc[${controls.length-1}], q[${block.target}];\n`, block.block_id]);
 
     // ccx gates 
     for(let i = controls.length - 1; i >= 2; i--)
@@ -1029,6 +1044,8 @@ function n_bit_toffoli_to_qasm(block, variables, num_qubits)
         
         process_blocks(qasm, x_gate, variables, num_qubits, undefined);
     }
+
+    
     return qasm;
 }
 
@@ -1046,4 +1063,4 @@ export {generate_QASM,
     custom_function_ref,
     n_bit_toffoli};
 
-    export default generate_QASM;
+export default generate_QASM;	
