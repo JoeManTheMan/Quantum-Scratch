@@ -52,14 +52,6 @@ function qasmConverter(blocks){
     console.log(circuit.run());
 
     console.log(circuit.exportToQASM());
-
-    var test_circuit = new QuantumCircuit;
-    //test_circuit.addGate("x", 0, 0);
-    test_circuit.run([1, 0]);
-    console.log(test_circuit.stateAsArray());
-    console.log(test_circuit.exportToQASM());
-
-    console.log(errors);
 }
 
 export default qasmConverter;

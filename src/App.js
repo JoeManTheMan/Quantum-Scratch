@@ -48,6 +48,8 @@ class App extends React.Component {
   }
 
   generateCode = () => {
+    // empty the array of blocks
+    blocks.length = 0;
     var code = BlocklyJS.workspaceToCode(
       this.simpleWorkspace.current.workspace
     );
@@ -69,6 +71,7 @@ class App extends React.Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <button onClick={this.generateCode}>Convert</button>
+          <button onClick={() => this.updateGraphState(testData)}> Update Graph </button>
           <BlocklyComponent ref={this.simpleWorkspace}
           readOnly={false} trashcan={true} media={'media/'}
           move={{
@@ -119,19 +122,7 @@ class App extends React.Component {
             <Block type="n_bit_toffoli_to_qasm" />
           </Category>
           </BlocklyComponent>
-          <button onClick={() => this.updateGraphState(testData)}> Update Graph </button>
         </header>
-        <div >
-        <BlocklyComponent ref={this.simpleWorkspace}
-        readOnly={false} trashcan={true} media={'media/'}
-        move={{
-          scrollbars: true,
-          drag: true,
-          wheel: true
-        }}
-        >
-        </BlocklyComponent>
-        </div>
 
         <div>
           <ProbabilitiesGraph data={this.state.data} />

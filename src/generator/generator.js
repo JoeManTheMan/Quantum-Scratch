@@ -57,7 +57,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     blocks.push(gate);
     // console.log(blocks)
     // console.log(generate_QASM(blocks, value_qubit))
-    return gate;
+    return "X";
     
   };
 
@@ -67,7 +67,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     blocks.push(gate);
     // console.log(blocks)
     // console.log(generate_QASM(blocks, value_qubit))
-    return  gate;
+    return "Y";
   };
 
   Blockly.JavaScript['test_z_gate'] = function(block) {
@@ -76,7 +76,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     blocks.push(gate);
     // console.log(blocks)
     // console.log(generate_QASM(blocks, value_qubit))
-    return gate;
+    return "Z";
   };
 
   Blockly.JavaScript['test_hadamard_gate'] = function(block) {
@@ -85,7 +85,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     blocks.push(gate);
     // console.log(blocks)
     // console.log(generate_QASM(blocks, value_qubit))
-    return gate;
+    return "H";
   };
 
   Blockly.JavaScript['u3_gate'] = function(block) {
@@ -95,7 +95,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('u3', Math.random, [parseInt(value_param_1), parseInt(value_param_2), parseInt(value_param_3)], [parseInt(value_qubit)]);
     blocks.push(gate);;
-    return gate;
+    return "U3";
   }
 
   Blockly.JavaScript['u2_gate'] = function(block) {
@@ -103,16 +103,16 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_param_2 = Blockly.JavaScript.valueToCode(block, 'Param 2', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('u2', Math.random, [parseInt(value_param_1), parseInt(value_param_2)], [parseInt(value_qubit)]);
-    blocks.push(gate);;
-    return gate;
+    blocks.push(gate);
+    return "U2";
   };
 
   Blockly.JavaScript['u1_gate'] = function(block) {
     var value_param_1 = Blockly.JavaScript.valueToCode(block, 'Param 1', Blockly.JavaScript.ORDER_ATOMIC);
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('u1', Math.random, [parseInt(value_param_1)], [parseInt(value_qubit)]);
-    blocks.push(gate);;
-    return gate;
+    blocks.push(gate);
+    return "U1";
   };
 
   Blockly.JavaScript['cx_gate'] = function(block) {
@@ -120,42 +120,42 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_qubit_2 = Blockly.JavaScript.valueToCode(block, 'Qubit-2', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('cx', Math.random, [], [parseInt(value_qubit_1), parseInt(value_qubit_2)]);
     blocks.push(gate);
-    return gate;
+    return "CX";
   };
 
   Blockly.JavaScript['id_gate'] = function(block) {
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('id', Math.random, [], [parseInt(value_qubit)]);
     blocks.push(gate);
-    return gate;
+    return "ID";
   };
 
   Blockly.JavaScript['s_gate'] = function(block) {
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('s', Math.random, [], [parseInt(value_qubit)]);
     blocks.push(gate);
-    return gate;
+    return "S";
   };
 
   Blockly.JavaScript['sdg_gate'] = function(block) {
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('sdg', Math.random, [], [parseInt(value_qubit)]);
     blocks.push(gate);
-    return gate;
+    return "SDG";
   };
 
   Blockly.JavaScript['t_gate'] = function(block) {
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('t', Math.random, [], [parseInt(value_qubit)]);
     blocks.push(gate);
-    return gate;
+    return "T";
   };
 
   Blockly.JavaScript['tdg_gate'] = function(block) {
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('tdg', Math.random, [], [parseInt(value_qubit)]);
     blocks.push(gate);
-    return gate;
+    return "TDG";
   };
 
   Blockly.JavaScript['rx_gate'] = function(block) {
@@ -163,7 +163,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('rx', Math.random, [parseInt(value_param_1)], [parseInt(value_qubit)]);
     blocks.push(gate);
-    return gate;
+    return "RX";
   };
 
   Blockly.JavaScript['ry_gate'] = function(block) {
@@ -171,7 +171,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('ry', Math.random, [parseInt(value_param_1)], [parseInt(value_qubit)]);
     blocks.push(gate);
-    return gate;
+    return "RY";
   };
 
   Blockly.JavaScript['rz_gate'] = function(block) {
@@ -179,7 +179,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_qubit = Blockly.JavaScript.valueToCode(block, 'Qubit', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('rz', Math.random, [parseInt(value_param_1)], [parseInt(value_qubit)]);
     blocks.push(gate);
-    return gate;
+    return "RZ";
   };
 
   Blockly.JavaScript['cz_gate'] = function(block) {
@@ -187,7 +187,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_qubit_2 = Blockly.JavaScript.valueToCode(block, 'Qubit-2', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('cz', Math.random, [], [parseInt(value_qubit_1),parseInt(value_qubit_2)]);
     blocks.push(gate);
-    return gate;
+    return "CZ";
   };
 
   Blockly.JavaScript['cy_gate'] = function(block) {
@@ -195,7 +195,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_qubit_2 = Blockly.JavaScript.valueToCode(block, 'Qubit-2', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('cy', Math.random, [], [parseInt(value_qubit_1),parseInt(value_qubit_2)]);
     blocks.push(gate);
-    return gate;
+    return "CY";
   };
 
   Blockly.JavaScript['ch_gate'] = function(block) {
@@ -203,7 +203,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_qubit_2 = Blockly.JavaScript.valueToCode(block, 'Qubit-2', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('ch', Math.random, [], [parseInt(value_qubit_1),parseInt(value_qubit_2)]);
     blocks.push(gate);
-    return gate;
+    return "CH";
   };
 
   Blockly.JavaScript['crz_gate'] = function(block) {
@@ -212,7 +212,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_qubit_2 = Blockly.JavaScript.valueToCode(block, 'Qubit-2', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('crz', Math.random, [parseInt(value_param_1)], [parseInt(value_qubit_1), parseInt(value_qubit_2)]);
     blocks.push(gate);
-    return gate;
+    return "CRZ"
   };
 
   Blockly.JavaScript['cu1_gate'] = function(block) {
@@ -221,7 +221,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_qubit_2 = Blockly.JavaScript.valueToCode(block, 'Qubit-2', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('cu1', Math.random, [parseInt(value_param_1)], [parseInt(value_qubit_1), parseInt(value_qubit_2)]);
     blocks.push(gate);
-    return gate;
+    return "CU1";
   };
 
   Blockly.JavaScript['cu3_gate'] = function(block) {
@@ -232,7 +232,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_qubit_2 = Blockly.JavaScript.valueToCode(block, 'Qubit-2', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('cu3', Math.random, [parseInt(value_param_1), parseInt(value_param_2), parseInt(value_param_3)], [parseInt(value_qubit_1), parseInt(value_qubit_2)]);
     blocks.push(gate);
-    return gate;
+    return "CU3";
   };
 
   Blockly.JavaScript['ccx_gate'] = function(block) {
@@ -241,7 +241,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_qubit_3 = Blockly.JavaScript.valueToCode(block, 'Qubit_3', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new built_in_gate_block('ccx', Math.random, [0], [parseInt(value_qubit_1),parseInt(value_qubit_2),parseInt(value_qubit_3)]);
     blocks.push(gate);
-    return gate;
+    return "CCX";
   };
 
   Blockly.JavaScript['var_gate'] = function(block) {
@@ -250,14 +250,14 @@ Blockly.JavaScript['test_one'] = function(block) {
     var dropdown_type = block.getFieldValue('TYPE');
     var gate = new var_def_block(text_name, Math.random, dropdown_type, text_input);
     blocks.push(gate);
-    return gate;
+    return "VAR";
   };
 
   Blockly.JavaScript['var_ref_gate'] = function(block) {
     var text_name = block.getFieldValue('NAME');
     var gate = new var_ref_block(text_name, Math.random);
     blocks.push(gate);
-    return gate;
+    return "REF";
   };
 
   Blockly.JavaScript['assignment_block'] = function(block) {
@@ -266,7 +266,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_rhs = Blockly.JavaScript.valueToCode(block, 'rhs', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = new var_assignment_block(text_name, Math.random, value_lhs, value_rhs);
     blocks.push(gate);
-    return gate;
+    return "ASS";
   };
 
   Blockly.JavaScript['expression_block'] = function(block) {
@@ -276,7 +276,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_rhs = Blockly.JavaScript.valueToCode(block, 'rhs', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = var_assignment_block(text_name, Math.random, dropdown_operator, [value_lhs, value_rhs]);
     blocks.push(gate);
-    return gate;
+    return  "EXP";
   };
 
   Blockly.JavaScript['measurement_gate_true'] = function(block) {
@@ -284,7 +284,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var text_qubit = block.getFieldValue('QUBIT');
     var gate = measurement_block(text_name, Math.random, text_qubit, true);
     blocks.push(gate);
-    return gate;
+    return "MET";
   };
 
   Blockly.JavaScript['measurement_gate_true'] = function(block) {
@@ -293,7 +293,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var text_qubit = block.getFieldValue('QUBIT');
     var gate = measurement_block(text_name, Math.random, text_qubit, dropdown_name);
     blocks.push(gate);
-    return gate;
+    return "MES";
   };
 
   Blockly.JavaScript['if_block'] = function(block) {
@@ -302,7 +302,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_gate = Blockly.JavaScript.valueToCode(block, 'GATE', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = if_block(text_name, Math.random, value_value, value_gate);
     blocks.push(gate);
-    return gate;
+    return "IF";
   };
 
   Blockly.JavaScript['loop_block'] = function(block) {
@@ -310,7 +310,7 @@ Blockly.JavaScript['test_one'] = function(block) {
     var statements_blocks = Blockly.JavaScript.statementToCode(block, 'Blocks');
     var gate = loop_block("", Math.random, value_num, statements_blocks);
     blocks.push(gate);
-    return gate;
+    return "LOOP";
   };
 
   Blockly.JavaScript['custom_function_def'] = function(block) {
@@ -318,14 +318,14 @@ Blockly.JavaScript['test_one'] = function(block) {
     var statements_blocks = Blockly.JavaScript.statementToCode(block, 'Blocks');
     var gate = custom_function_def(text_name, Math.random, {}, {}, statements_blocks);
     blocks.push(gate);
-    return gate;
+    return "FUNDEF";
   };
 
   Blockly.JavaScript['custom_function_ref'] = function(block) {
     var text_name = block.getFieldValue('NAME');
     var gate = custom_function_ref(text_name, Math.random, {}, {});
     blocks.push(gate);
-    return gate;
+    return "FUNREF";
   };
 
   Blockly.JavaScript['n_bit_toffoli_to_qasm'] = function(block) {
@@ -334,5 +334,5 @@ Blockly.JavaScript['test_one'] = function(block) {
     var value_target_qubit = Blockly.JavaScript.valueToCode(block, 'TARGET_QUBIT', Blockly.JavaScript.ORDER_ATOMIC);
     var gate = n_bit_toffoli("", Math.random, value_control_quibit, value_anticontrol_qubit, value_target_qubit);
     blocks.push(gate);
-    return gate;
+    return "TOF";
   };
