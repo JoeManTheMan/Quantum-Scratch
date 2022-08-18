@@ -928,9 +928,9 @@ function expand_loop_count(block, variables)
 
     copy_block(expanded_block, block);
 
-    if(expanded_block.loop_count.block_type == block_types.expression)
+    if(expanded_block.num_loops.block_type == block_types.expression)
     {
-        expanded_block.loop_count = evaluate_expression_block(expanded_block.loop_count, variables, var_types.int);
+        expanded_block.num_loops = evaluate_expression_block(expanded_block.loop_count, variables, var_types.int);
     } else
     {
         let num_loops = [expanded_block.num_loops];
