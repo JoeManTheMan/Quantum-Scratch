@@ -11,7 +11,6 @@ import {generate_QASM,
   loop_block,
   custom_function_def,
   custom_function_ref,
-  n_bit_controlled_gate,
   n_bit_toffoli} from '../QasmStuff/QASM_generator.js';
 
 

@@ -65,6 +65,7 @@ class App extends React.Component {
 
     // create the circuit, run it, use its properties to update the graph
     let circuit = generateCircuit(qasm_string);
+    circuit.run();
     this.updateCircuit(circuit);
     this.updateGraphState(get_circuit_properties(circuit));
   }
