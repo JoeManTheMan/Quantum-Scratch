@@ -1,3 +1,11 @@
+# Quantum Scratch
+
+## Important Resources
+
+OpenQASM 2.0 specification https://arxiv.org/pdf/1707.03429.pdf
+
+Quantum Circuit Documentation https://quantum-circuit.com/docs/quantum_circuit (Documentation does not cover all functions used in this project)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
