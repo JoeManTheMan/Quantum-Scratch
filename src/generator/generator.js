@@ -57,7 +57,6 @@ Blockly.JavaScript['test_one'] = function(block) {
     // console.log(blocks)
     // console.log(generate_QASM(blocks, value_qubit))
     return "X";
-    
   };
 
   Blockly.JavaScript['test_y_gate'] = function(block) {
@@ -321,8 +320,11 @@ Blockly.JavaScript['test_one'] = function(block) {
 
   Blockly.JavaScript['custom_function_def'] = function(block) {
     var text_name = block.getFieldValue('NAME');
-    var statements_blocks = Blockly.JavaScript.statementToCode(block, 'Blocks');
-    var gate = new custom_function_def(text_name, Math.random, {}, {}, statements_blocks);
+    Blockly.JavaScript.statementToCode(block, 'Blocks');
+    let loop_start = blocks.length;
+    let loop_body = blocks.slice(loop_start);
+    blocks.length = loop_start;
+    var gate = new custom_function_def(text_name, Math.random, {}, {}, loop_body);
     blocks.push(gate);
     return "FUNDEF";
   };

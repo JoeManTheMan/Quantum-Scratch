@@ -131,7 +131,7 @@ class App extends React.Component {
             <Block type="assignment_block" />
             <Block type="expression_block" />
           </Category>
-          <Category name="Temp">
+          <Category name="Other_Blocks">
             <Block type="measurement_gate" />
             <Block type="measurement_gate_true" />
             <Block type="if_block" />

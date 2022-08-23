@@ -227,7 +227,7 @@ Blockly.Blocks['test_input'] = {
   }
 };
 
-var x_gate = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#257gh2
+var x_gate = { //https://blockly-demo.appspot.com/static/demos/blockfactory/index.html#v8faew
   "type": "x_gate",
   "message0": "X-Gate: Qubit %1 %2",
   "args0": [
@@ -240,6 +240,7 @@ var x_gate = { //https://blockly-demo.appspot.com/static/demos/blockfactory/inde
     }
   ],
   "inputsInline": true,
+  "previousStatement": null,
   "nextStatement": null,
   "colour": 230,
   "tooltip": "",
